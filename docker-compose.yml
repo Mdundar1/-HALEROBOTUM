@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  client:
+    build: ./client
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://server:3001
+      - API_PROXY_URL=http://server:3001
+    depends_on:
+      - server
+    networks:
+      - app-network
+
+  server:
+    build: ./server
+    ports:
+      - "3001:3001"
+    environment:
+      - PORT=3001
+      - OCR_SERVICE_URL=http://ocr-service:8000
+    env_file:
+      - ./server/.env
+    volumes:
+      - ./server/database.sqlite:/app/database.sqlite
+      - ./server/uploads:/app/uploads
+    depends_on:
+      - ocr-service
+    networks:
+      - app-network
+
+  ocr-service:
+    build: ./ocr-service
+    ports:
+      - "8000:8000"
+    volumes:
+      - ocr-models:/root/.paddleocr
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  ocr-models:

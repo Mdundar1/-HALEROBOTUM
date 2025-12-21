@@ -1,0 +1,18 @@
+{
+    "name": "ihalerobotum",
+    "version": "1.0.0",
+    "private": true,
+    "workspaces": [
+        "client",
+        "server"
+    ],
+    "scripts": {
+        "install:all": "npm install",
+        "build": "npm run build -w client && npm run build -w server",
+        "start": "npm start -w server",
+        "dev": "npm run dev"
+    },
+    "engines": {
+        "node": ">=18.0.0"
+    }
+}

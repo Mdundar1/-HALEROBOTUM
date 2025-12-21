@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.next/
+.env
+*.sqlite
+*.sqlite-journal
+*.sqlite-shm
+*.sqlite-wal
+server/public/
+server/dist/
+client/out/
+.DS_Store
+auth_debug.log
+secret_debug.log
