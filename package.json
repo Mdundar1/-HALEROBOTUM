@@ -14,5 +14,8 @@
     },
     "engines": {
         "node": ">=18.0.0"
+    },
+    "dependencies": {
+        "@types/better-sqlite3": "^7.6.13"
     }
 }
