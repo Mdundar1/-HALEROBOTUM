@@ -11,7 +11,7 @@ import * as XLSX from 'xlsx';
 import {
     ArrowUpRight, BarChart3, PieChart, Clock, Plus, X, ArrowRight,
     Calculator, Trash2, Download, Save, FileText, Upload, AlertCircle,
-    CheckCircle, Filter, Search, Edit2, ChevronDown
+    CheckCircle, Filter, Search, Edit2, ChevronDown, FolderPlus
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -886,13 +886,13 @@ export default function AnalysisPage() {
 
 
     return (
-        <div className="min-h-screen bg-[#fcfdfe] overflow-hidden selection:bg-cyan-100 selection:text-cyan-900 font-sans">
+        <div className="min-h-screen bg-slate-50 overflow-hidden selection:bg-indigo-100 selection:text-indigo-900 font-sans">
             <Navigation />
 
-            {/* AURA BACKGROUND ENGINE */}
+            {/* CORPORATE BACKGROUND ENGINE */}
             <div className="fixed inset-0 pointer-events-none z-0">
-                <div className="absolute top-[-10%] right-[-10%] w-[80vw] h-[80vw] bg-cyan-100/20 blur-[120px] rounded-full animate-aura"></div>
-                <div className="absolute bottom-[-10%] left-[-10%] w-[60vw] h-[60vw] bg-teal-50/30 blur-[100px] rounded-full animate-aura" style={{ animationDirection: 'reverse', animationDuration: '25s' }}></div>
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[600px] bg-indigo-500/5 blur-[120px] rounded-full"></div>
+                <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-[0.02] pointer-events-none"></div>
             </div>
 
             <div className="relative z-10">
@@ -903,51 +903,48 @@ export default function AnalysisPage() {
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
-                            className="fixed inset-0 z-[100] bg-white/95 backdrop-blur-md flex items-center justify-center"
+                            className="fixed inset-0 z-[100] bg-slate-900/40 backdrop-blur-md flex items-center justify-center p-4"
                         >
                             <motion.div
                                 initial={{ scale: 0.9, opacity: 0 }}
                                 animate={{ scale: 1, opacity: 1 }}
-                                className="bg-white p-8 md:p-12 rounded-[3rem] shadow-2xl shadow-cyan-900/10 flex flex-col items-center max-w-lg w-full text-center relative overflow-hidden border border-slate-100"
+                                className="bg-white p-12 rounded-[2.5rem] shadow-2xl flex flex-col items-center max-w-md w-full text-center border border-slate-100"
                             >
-                                <div className="absolute inset-0 bg-gradient-to-br from-cyan-50/30 to-white -z-10"></div>
-                                <div className="mb-8 flex flex-col items-center">
+                                <div className="mb-8">
                                     <Logo animated={true} />
                                 </div>
-                                <h2 className="text-3xl font-black text-slate-900 mb-2 tracking-tight">Analiz Hazırlanıyor</h2>
-                                <p className="text-slate-500 mb-8 font-medium">
-                                    maliyet724 akıllı algoritmaları metraj kalemlerini tarıyor ve en güncel verilerle poz eşleştirmelerini yapıyor...
+                                <h2 className="text-2xl font-bold text-slate-900 mb-2">Analiz Hazırlanıyor</h2>
+                                <p className="text-slate-500 mb-8 text-sm font-medium">
+                                    Dosyadaki metraj kalemleri taranıyor ve güncel birim fiyatlarla eşleştiriliyor...
                                 </p>
-                                <div className="w-full bg-slate-100 h-3 rounded-full overflow-hidden shadow-inner">
-                                    <div className="h-full bg-cyan-600 animate-progress-indeterminate"></div>
+                                <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                                    <div className="h-full bg-indigo-600 animate-progress-indeterminate"></div>
                                 </div>
                             </motion.div>
                         </motion.div>
                     )}
                 </AnimatePresence>
 
-                {/* Dashboard Header - Compact & Functional */}
-                <div className="pt-24 pb-8 px-4 sm:px-6 lg:px-8 max-w-[1600px] mx-auto">
-                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-                        <motion.div
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ duration: 0.8 }}
-                        >
-                            <div className="flex items-center gap-3 mb-1">
-                                <Logo className="scale-90 -ml-2" animated={false} />
-                                <span className="text-slate-400 font-bold ml-1 uppercase text-lg italic tracking-widest no-italic">Analiz</span>
+                {/* Dashboard Header */}
+                <div className="pt-24 pb-12 px-4 sm:px-6 lg:px-8 max-w-[1600px] mx-auto">
+                    <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8">
+                        <div>
+                            <div className="flex items-center gap-3 mb-2">
+                                <div className="p-2.5 bg-indigo-600 rounded-xl text-white shadow-lg shadow-indigo-600/20">
+                                    <BarChart3 className="w-6 h-6" />
+                                </div>
+                                <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Maliyet Analizi</h1>
                             </div>
-                            <p className="text-slate-500 text-sm ml-1 font-medium">
-                                Proje detaylarını görüntüleyin ve maliyet raporlarınızı yönetin.
+                            <p className="text-slate-500 font-medium text-sm">
+                                Proje metrajlarını yükleyin, birim fiyat eşleşmelerini düzenleyin ve profesyonel raporlayın.
                             </p>
-                        </motion.div>
+                        </div>
 
                         {results.length > 0 && (
                             <motion.div
-                                initial={{ opacity: 0, x: 20 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                className="flex items-center gap-3"
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                className="flex flex-wrap items-center gap-3"
                             >
                                 <button
                                     onClick={() => {
@@ -956,43 +953,38 @@ export default function AnalysisPage() {
                                             setFile(null);
                                         }
                                     }}
-                                    className="px-5 py-3 rounded-2xl font-bold text-slate-500 hover:text-rose-600 hover:bg-rose-50 transition-all flex items-center gap-2"
+                                    className="px-5 py-3 rounded-xl font-bold text-slate-500 hover:text-rose-600 hover:bg-rose-50 transition-all flex items-center gap-2 border border-transparent hover:border-rose-100"
                                 >
                                     <Trash2 className="w-4 h-4" />
-                                    <span className="hidden sm:inline">Temizle</span>
+                                    <span>Sıfırla</span>
                                 </button>
-                                <div className="h-8 w-px bg-slate-200 mx-2 hidden md:block"></div>
+
+                                <div className="h-8 w-px bg-slate-200 mx-2 hidden sm:block"></div>
+
                                 <button
-                                    onClick={() => {
-                                        if (!hasActiveSubscription) {
-                                            alert('Excel raporu indirmek için aktif bir aboneliğiniz olmalıdır.');
-                                            return;
-                                        }
-                                        handleExportExcel();
-                                    }}
-                                    className={`px-6 py-3.5 rounded-2xl font-black transition-all flex items-center gap-2.5 shadow-sm
-                                        ${!hasActiveSubscription ? 'bg-slate-50 text-slate-400 border-slate-200 cursor-not-allowed' : 'bg-white border-slate-200 text-slate-700 hover:border-indigo-500 hover:text-indigo-600 hover:bg-indigo-50'}
+                                    disabled={!hasActiveSubscription}
+                                    onClick={handleExportExcel}
+                                    className={`px-6 py-3 rounded-xl font-bold transition-all flex items-center gap-2.5 shadow-sm border
+                                        ${!hasActiveSubscription
+                                            ? 'bg-slate-100 text-slate-400 border-slate-200 cursor-not-allowed'
+                                            : 'bg-white border-slate-200 text-slate-700 hover:border-indigo-500 hover:text-indigo-600 hover:bg-indigo-50/50'}
                                     `}
                                 >
                                     <Download className="w-4 h-4" />
-                                    <span className="hidden sm:inline">Excel Raporu</span>
+                                    <span>Excel Raporu</span>
                                 </button>
+
                                 <button
-                                    onClick={() => {
-                                        if (!isLoggedIn) {
-                                            router.push('/?auth=login');
-                                            return;
-                                        }
-                                        if (!hasActiveSubscription) {
-                                            alert('Analiz kaydetmek için aktif bir aboneliğiniz olmalıdır.');
-                                            return;
-                                        }
-                                        setSaveModalOpen(true);
-                                    }}
-                                    className={`btn-primary flex items-center gap-2.5 ${!hasActiveSubscription ? 'opacity-50' : ''}`}
+                                    disabled={!isLoggedIn || !hasActiveSubscription}
+                                    onClick={() => setSaveModalOpen(true)}
+                                    className={`px-8 py-3 rounded-xl font-bold transition-all flex items-center gap-2.5 shadow-lg shadow-indigo-600/10
+                                        ${(!isLoggedIn || !hasActiveSubscription)
+                                            ? 'bg-indigo-400 text-white cursor-not-allowed'
+                                            : 'bg-indigo-600 text-white hover:bg-indigo-700 hover:shadow-indigo-600/20'}
+                                    `}
                                 >
                                     <Save className="w-4 h-4" />
-                                    <span className="hidden sm:inline">Analizi Kaydet</span>
+                                    <span>Projeyi Kaydet</span>
                                 </button>
                             </motion.div>
                         )}
@@ -1000,164 +992,127 @@ export default function AnalysisPage() {
                 </div>
 
                 <main className="px-4 sm:px-6 lg:px-8 max-w-[1600px] mx-auto">
-                    {/* STATUS: EMPTY - SHOW UPLOAD */}
-                    {results.length === 0 ? (
-                        <div className="flex flex-col lg:flex-row gap-8 items-start">
-                            {/* Left: Upload Card */}
-                            <div className="w-full lg:w-2/3 relative">
-                                {isLoggedIn && isTrial && !hasActiveSubscription && !subscriptionLoading && (
-                                    <div className="mb-8 p-6 bg-rose-50 border-2 border-rose-100 rounded-[2.5rem] flex items-start gap-4 animate-fade-in">
-                                        <div className="p-3 bg-rose-100 text-rose-600 rounded-2xl">
-                                            <AlertCircle className="w-6 h-6" />
-                                        </div>
-                                        <div>
-                                            <h4 className="font-black text-rose-900 text-lg uppercase tracking-tight">Deneme Süreniz Sona Erdi</h4>
-                                            <p className="text-rose-600 font-bold text-sm leading-relaxed">Maliyet analizi özelliğini kullanmaya devam etmek için lütfen bir paket satın alın.</p>
-                                            <div className="mt-4 flex gap-3">
-                                                <Link href="/pricing" className="inline-flex items-center gap-2 bg-rose-600 text-white px-5 py-2.5 rounded-xl font-black text-xs hover:bg-rose-700 transition-all uppercase tracking-widest shadow-lg shadow-rose-200">
-                                                    Paketleri Gör
-                                                </Link>
-                                            </div>
-                                        </div>
+                    {/* STATE: EMPTY - SHOW UPLOAD */}
+                    {results.length === 0 && (
+                        <div className="max-w-4xl mx-auto">
+                            {/* Subscription Alert */}
+                            {isLoggedIn && isTrial && !hasActiveSubscription && !subscriptionLoading && (
+                                <motion.div
+                                    initial={{ opacity: 0, y: -10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    className="mb-8 p-6 bg-rose-50 border border-rose-100 rounded-3xl flex items-start gap-4 shadow-sm"
+                                >
+                                    <div className="p-2.5 bg-rose-100 text-rose-600 rounded-xl">
+                                        <AlertCircle className="w-5 h-5" />
                                     </div>
-                                )}
+                                    <div>
+                                        <h4 className="font-bold text-rose-900 mb-1">Deneme Süreniz Sona Erdi</h4>
+                                        <p className="text-rose-700 text-sm font-medium mb-3">
+                                            Analiz özelliğini kullanmaya devam etmek için paketlerden birini seçmelisiniz.
+                                        </p>
+                                        <Link href="/#pricing" className="text-rose-600 font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 hover:gap-2 transition-all">
+                                            Paketleri İncele <ArrowRight className="w-4 h-4" />
+                                        </Link>
+                                    </div>
+                                </motion.div>
+                            )}
 
-                                <div className={`bg-white rounded-[2.5rem] border-2 border-dashed transition-all duration-500 relative overflow-hidden group
-                                    ${file ? 'border-indigo-500 bg-indigo-50/10' : 'border-slate-200 hover:border-indigo-400 hover:bg-indigo-50/50'}
-                                 shadow-sm hover:shadow-xl shadow-indigo-100/20`}>
-                                    <div className="absolute inset-0 bg-grid-slate-50 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.8))] -z-10"></div>
+                            {/* Main Upload Workspace */}
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.98 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                className={`relative bg-white rounded-[3rem] border-2 border-dashed transition-all duration-500 overflow-hidden shadow-2xl shadow-indigo-900/5
+                                    ${file ? 'border-indigo-500 bg-indigo-50/20' : 'border-slate-200 hover:border-indigo-300 hover:bg-slate-50/50'}
+                                `}
+                            >
+                                <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-[0.03] pointer-events-none"></div>
 
+                                <input
+                                    type="file"
+                                    onChange={(e) => {
+                                        if (e.target.files && e.target.files[0]) {
+                                            setFile(e.target.files[0]);
+                                        }
+                                    }}
+                                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-50"
+                                    accept=".xlsx, .xls, .docx, .txt"
+                                />
+
+                                <div className="p-16 flex flex-col items-center text-center">
                                     {file ? (
-                                        <div className="p-12 text-center flex flex-col items-center justify-center min-h-[400px] relative z-20">
-                                            <div className="animate-fade-in flex flex-col items-center">
-                                                <div className="w-24 h-24 bg-indigo-100 text-indigo-600 rounded-[2rem] flex items-center justify-center mb-6 shadow-xl shadow-indigo-100 group-hover:scale-110 transition-transform duration-500">
-                                                    <FileText className="w-10 h-10" />
-                                                </div>
-                                                <h3 className="text-xl font-bold text-slate-900 mb-1">{file.name}</h3>
-                                                <p className="text-slate-500 mb-6 font-medium text-sm">
-                                                    {(file.size / 1024 / 1024).toFixed(2)} MB • Hazır
-                                                </p>
-                                                <div className="flex gap-4 relative z-30">
-                                                    <button
-                                                        type="button"
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            setFile(null);
-                                                        }}
-                                                        className="px-6 py-3 rounded-2xl font-bold text-slate-600 hover:bg-white hover:shadow-md transition-all text-sm border border-transparent hover:border-slate-100"
-                                                    >
-                                                        Dosyayı Değiştir
-                                                    </button>
-                                                    <button
-                                                        type="button"
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            handleUpload();
-                                                        }}
-                                                        className="px-8 py-3 rounded-2xl font-black text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:shadow-xl hover:shadow-indigo-100 hover:-translate-y-1 transition-all flex items-center gap-2 text-sm"
-                                                    >
-                                                        <Calculator className="w-4 h-4" />
-                                                        Analizi Başlat
-                                                    </button>
-                                                </div>
+                                        <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 flex flex-col items-center">
+                                            <div className="w-24 h-24 bg-indigo-600 text-white rounded-[2rem] flex items-center justify-center mb-8 shadow-xl shadow-indigo-600/30">
+                                                <FileText className="w-10 h-10" />
+                                            </div>
+                                            <div className="mb-8">
+                                                <h3 className="text-2xl font-bold text-slate-900 mb-2">{file.name}</h3>
+                                                <span className="px-3 py-1 bg-slate-100 text-slate-500 rounded-lg text-xs font-bold uppercase tracking-wider">
+                                                    {(file.size / 1024 / 1024).toFixed(2)} MB • Analize Hazır
+                                                </span>
+                                            </div>
+                                            <div className="flex flex-wrap justify-center gap-4 relative z-[60]">
+                                                <button
+                                                    onClick={(e) => { e.stopPropagation(); setFile(null); }}
+                                                    className="px-6 py-3.5 rounded-xl font-bold text-slate-500 hover:bg-white hover:text-slate-900 transition-all border border-transparent hover:border-slate-100"
+                                                >
+                                                    Dosyayı Değiştir
+                                                </button>
+                                                <button
+                                                    onClick={(e) => { e.stopPropagation(); handleUpload(); }}
+                                                    className="px-10 py-3.5 rounded-xl font-bold text-white bg-indigo-600 hover:bg-indigo-700 shadow-lg shadow-indigo-600/20 transition-all flex items-center gap-2.5 active:scale-95"
+                                                >
+                                                    <Calculator className="w-4 h-4" />
+                                                    Analizi Başlat
+                                                </button>
                                             </div>
                                         </div>
                                     ) : (
-                                        <>
-                                            {/* FILE INPUT - ONLY RENDERED HERE */}
-                                            <input
-                                                type="file"
-                                                onChange={(e) => {
-                                                    if (e.target.files && e.target.files[0]) {
-                                                        setFile(e.target.files[0]);
-                                                    }
-                                                }}
-                                                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-50"
-                                                accept=".xlsx, .xls, .docx, .txt"
-                                            />
-
-                                            <div className="p-12 text-center flex flex-col items-center justify-center min-h-[440px]">
-                                                <div className="w-24 h-24 bg-white text-slate-300 rounded-[2.5rem] flex items-center justify-center mb-8 border border-slate-100 shadow-sm group-hover:scale-110 group-hover:text-indigo-600 group-hover:border-indigo-100 group-hover:shadow-xl group-hover:shadow-indigo-50 transition-all duration-700">
-                                                    <Upload className="w-12 h-12" />
-                                                </div>
-                                                <h3 className="text-3xl font-black text-slate-900 mb-4 tracking-tight uppercase italic">
-                                                    Birim Fiyat Cetvelinizi Yükleyin
-                                                </h3>
-                                                <p className="text-slate-500 max-w-[20rem] mx-auto leading-relaxed mb-10 font-medium text-sm">
-                                                    Hesaplamak istediğiniz metrajı buraya sürükleyin veya seçmek için tıklayın.
-                                                </p>
-                                                <div className="flex items-center gap-4 text-[10px] font-black tracking-widest text-slate-400 bg-white px-6 py-3 rounded-2xl border border-slate-100 shadow-sm transition-all group-hover:border-indigo-50 uppercase">
-                                                    <span className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-blue-600 shadow-[0_0_8px_rgba(37,99,235,0.5)]"></div>EXCEL</span>
-                                                    <div className="w-px h-4 bg-slate-100"></div>
-                                                    <span className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-indigo-500 shadow-[0_0_8px_rgba(99,102,241,0.5)]"></div>WORD</span>
-                                                    <div className="w-px h-4 bg-slate-100"></div>
-                                                    <span className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-slate-800 shadow-[0_0_8px_rgba(30,41,59,0.5)]"></div>TXT</span>
-                                                </div>
+                                        <div className="flex flex-col items-center">
+                                            <div className="w-24 h-24 bg-slate-50 border border-slate-100 rounded-[2.5rem] flex items-center justify-center mb-10 text-slate-300">
+                                                <Upload className="w-10 h-10" />
                                             </div>
-                                        </>
+                                            <h2 className="text-4xl font-bold text-slate-900 mb-6 tracking-tight">Metraj Dosyanızı Yükleyin</h2>
+                                            <p className="text-slate-400 font-medium max-w-sm mb-12 leading-relaxed">
+                                                Hesaplamak istediğiniz birim fiyat cetvelini sürükleyip bırakın veya göz atmak için tıklayın.
+                                            </p>
+                                            <div className="flex gap-4 p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                                                {['EXCEL', 'WORD', 'TXT'].map((ext) => (
+                                                    <div key={ext} className="flex items-center gap-2 group/ext">
+                                                        <div className={`w-2 h-2 rounded-full shadow-[0_0_8px] 
+                                                            ${ext === 'EXCEL' ? 'bg-emerald-500 shadow-emerald-500/50' :
+                                                                ext === 'WORD' ? 'bg-blue-500 shadow-blue-500/50' :
+                                                                    'bg-slate-800 shadow-slate-800/50'}
+                                                        `}></div>
+                                                        <span className="text-[10px] font-bold text-slate-400 tracking-widest">{ext}</span>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
                                     )}
                                 </div>
-                            </div>
+                            </motion.div>
 
-                            {/* Right: Info / History / Warnings */}
-                            <div className="w-full lg:w-1/3 flex flex-col gap-8">
-                                {/* Warnings Block */}
-                                {(!hasActiveSubscription && !subscriptionLoading) && (
-                                    <div className="bg-gradient-to-br from-rose-50 to-white border border-rose-100 rounded-[2.5rem] p-8 shadow-sm relative overflow-hidden group hover:shadow-xl hover:shadow-rose-100/50 transition-all cursor-default">
-                                        <div className="absolute top-0 right-0 w-32 h-32 bg-rose-100/50 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none group-hover:bg-rose-200/50 transition-colors"></div>
-                                        <h3 className="text-rose-900 font-black text-xl mb-3 flex items-center gap-2 tracking-tight">
-                                            <AlertCircle className="w-6 h-6" /> Abonelik Gerekli
-                                        </h3>
-                                        <p className="text-rose-700/80 text-sm mb-6 font-medium leading-relaxed">
-                                            Bu gelişmiş analiz motorunu kullanabilmek için aktif bir aboneliğiniz olmalıdır.
-                                        </p>
-                                        <Link href="/#pricing" className="inline-flex items-center gap-2 text-rose-600 font-black text-sm group/btn">
-                                            Planları İncele <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
-                                        </Link>
+                            {/* Features Hint */}
+                            <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">
+                                {[
+                                    { icon: CheckCircle, title: 'Akıllı Eşleştirme', desc: 'Metraj kalemlerinizi binlerce poz arasından saniyeler içinde bulur.' },
+                                    { icon: BarChart3, title: 'Güncel Fiyatlar', desc: 'Tüm analizlerde her zaman en güncel resmi birim fiyatlar kullanılır.' },
+                                    { icon: Download, title: 'Hızlı Raporlama', desc: 'Hazırlanan analizleri tek tıkla profesyonel Excel raporuna dönüştürür.' }
+                                ].map((step, i) => (
+                                    <div key={i} className="flex flex-col items-center text-center">
+                                        <div className="w-12 h-12 bg-white rounded-2xl border border-slate-100 flex items-center justify-center text-indigo-500 mb-4 shadow-sm">
+                                            <step.icon className="w-5 h-5" />
+                                        </div>
+                                        <h5 className="font-bold text-slate-900 text-sm mb-2">{step.title}</h5>
+                                        <p className="text-xs text-slate-400 leading-relaxed font-medium">{step.desc}</p>
                                     </div>
-                                )}
-
-
-                                {/* Info Card */}
-                                <div className="bg-white rounded-[2.5rem] border border-slate-100 p-10 shadow-sm relative overflow-hidden">
-                                    <div className="absolute top-0 right-0 p-6 opacity-5">
-                                        <PieChart className="w-32 h-32" />
-                                    </div>
-                                    <h4 className="font-black text-slate-900 text-xl mb-8 flex items-center gap-3 tracking-tight">
-                                        <div className="w-2 h-8 bg-indigo-600 rounded-full"></div>
-                                        Nasıl Çalışır?
-                                    </h4>
-                                    <ul className="space-y-8 relative z-10">
-                                        <li className="flex gap-5 group">
-                                            <div className="w-10 h-10 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center font-black text-slate-400 text-sm shrink-0 group-hover:bg-indigo-600 group-hover:text-white group-hover:border-indigo-600 transition-all shadow-sm">01</div>
-                                            <div>
-                                                <h5 className="font-black text-slate-800 text-sm mb-1 uppercase tracking-tight">Dosyayı Yükle</h5>
-                                                <p className="text-xs text-slate-500 font-medium leading-relaxed">Excel, Word veya Metin belgesini sisteme güvenle yükleyin.</p>
-                                            </div>
-                                        </li>
-                                        <li className="flex gap-5 group">
-                                            <div className="w-10 h-10 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center font-black text-slate-400 text-sm shrink-0 group-hover:bg-indigo-600 group-hover:text-white group-hover:border-indigo-600 transition-all shadow-sm">02</div>
-                                            <div>
-                                                <div className="flex items-center gap-2 mb-1">
-                                                    <Logo className="scale-75 -ml-4" animated={false} />
-                                                </div>
-                                                <p className="text-xs text-slate-500 font-medium leading-relaxed">Sistem metraj kalemlerini otomatik olarak tanır ve en yakın pozlarla eşleştirir.</p>
-                                            </div>
-                                        </li>
-                                        <li className="flex gap-5 group">
-                                            <div className="w-10 h-10 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center font-black text-slate-400 text-sm shrink-0 group-hover:bg-indigo-600 group-hover:text-white group-hover:border-indigo-600 transition-all shadow-sm">03</div>
-                                            <div>
-                                                <h5 className="font-black text-slate-800 text-sm mb-1 uppercase tracking-tight">Düzenle ve İndir</h5>
-                                                <p className="text-xs text-slate-500 font-medium leading-relaxed">Sonuçları akıllı tabloda inceleyin, düzenleyin ve Excel olarak raporlayın.</p>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </div>
+                                ))}
                             </div>
                         </div>
-                    ) : (
-                        /* STATE: RESULTS DASHBOARD */
-                        <div className="animate-fade-in space-y-8">
+                    )}
+                    {/* STATE: RESULTS DASHBOARD */}
+                    {results.length > 0 && (
+                        <div className="animate-in fade-in duration-700 space-y-10">
                             {/* Dashboard Stats Grid */}
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                                 {/* Total Cost Card */}
@@ -1386,105 +1341,97 @@ export default function AnalysisPage() {
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
-                            className="fixed inset-0 bg-slate-900/40 backdrop-blur-xl z-[100] flex items-center justify-center p-4 sm:p-6"
-                            onClick={() => setEditingRow(null)}
+                            className="fixed inset-0 bg-slate-900/40 backdrop-blur-xl z-[100] flex items-center justify-center p-4"
                         >
                             <motion.div
                                 initial={{ scale: 0.95, opacity: 0, y: 20 }}
                                 animate={{ scale: 1, opacity: 1, y: 0 }}
                                 exit={{ scale: 0.95, opacity: 0, y: 20 }}
-                                className="bg-white rounded-[3rem] shadow-2xl w-full max-w-5xl h-[85vh] flex flex-col overflow-hidden border border-slate-100 relative"
-                                onClick={e => e.stopPropagation()}
+                                className="bg-white rounded-[2.5rem] shadow-2xl w-full max-w-5xl h-[85vh] flex flex-col overflow-hidden border border-slate-100 relative"
+                                onClick={(e) => e.stopPropagation()}
                             >
-                                {/* Modal Header */}
-                                <div className="p-10 border-b border-slate-100 flex justify-between items-start bg-slate-50/30">
-                                    <div>
-                                        <div className="flex items-center gap-3 mb-2">
-                                            <div className="p-2 bg-indigo-100 text-indigo-600 rounded-xl">
-                                                <Edit2 className="w-5 h-5" />
-                                            </div>
-                                            <h3 className="font-black text-3xl text-slate-900 tracking-tight">Eşleşen Pozu Düzenle</h3>
+                                <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-[0.02] pointer-events-none"></div>
+
+                                <div className="p-8 border-b border-slate-50 flex items-center justify-between bg-slate-50/50">
+                                    <div className="flex items-center gap-4">
+                                        <div className="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-indigo-600/20">
+                                            <Search className="w-6 h-6" />
                                         </div>
-                                        <p className="text-slate-500 font-medium max-w-2xl leading-relaxed">
-                                            "{results[editingRow].rawLine}" kalemi için veri setinden en doğru pozu seçin veya arama yapın.
-                                        </p>
+                                        <div>
+                                            <h2 className="text-xl font-bold text-slate-900 leading-none mb-1">Poz Eşleştirme</h2>
+                                            <p className="text-slate-500 text-xs font-medium">"{results[editingRow].rawLine}" kalemi için en uygun pozu seçin.</p>
+                                        </div>
                                     </div>
                                     <button
                                         onClick={() => setEditingRow(null)}
-                                        className="p-3 bg-white hover:bg-rose-50 rounded-2xl transition-all text-slate-400 hover:text-rose-500 border border-slate-100 shadow-sm"
+                                        className="w-12 h-12 rounded-2xl hover:bg-white hover:shadow-md transition-all flex items-center justify-center text-slate-400 hover:text-slate-900"
                                     >
                                         <X className="w-6 h-6" />
                                     </button>
                                 </div>
 
-                                {/* Search Section */}
-                                <div className="p-8 border-b border-slate-100 bg-white">
-                                    <div className="relative group">
-                                        <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-400 w-6 h-6 group-focus-within:text-indigo-600 transition-all" />
-                                        <input
-                                            className="w-full pl-16 pr-8 py-5 border border-slate-100 rounded-[2rem] bg-slate-50/50 focus:bg-white focus:border-indigo-500 focus:ring-8 focus:ring-indigo-500/5 transition-all outline-none font-bold text-slate-700 text-lg shadow-inner"
-                                            autoFocus
-                                            placeholder="Poz numarası veya tanım içeriği ile akıllı ara..."
-                                            value={searchQuery}
-                                            onChange={e => setSearchQuery(e.target.value)}
-                                        />
-                                        {searchQuery && (
-                                            <button
-                                                onClick={() => setSearchQuery('')}
-                                                className="absolute right-6 top-1/2 -translate-y-1/2 p-1.5 bg-slate-200 text-slate-500 rounded-full hover:bg-slate-300 transition-all"
-                                            >
-                                                <X className="w-4 h-4" />
-                                            </button>
-                                        )}
+                                <div className="flex-1 overflow-hidden flex flex-col">
+                                    <div className="p-8 bg-white">
+                                        <div className="relative group">
+                                            <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-300 group-focus-within:text-indigo-600 transition-colors" />
+                                            <input
+                                                autoFocus
+                                                type="text"
+                                                placeholder="Poz kodu veya tanımı ile arama yapın..."
+                                                className="w-full bg-slate-50 border border-slate-100 rounded-[1.5rem] pl-16 pr-6 py-5 text-lg font-medium text-slate-900 outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/5 transition-all h-20"
+                                                value={searchQuery}
+                                                onChange={(e) => setSearchQuery(e.target.value)}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div className="flex-1 overflow-y-auto px-8 pb-8 custom-scrollbar">
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            {filteredDataset.length > 0 ? (
+                                                filteredDataset.map((item, i) => (
+                                                    <motion.div
+                                                        key={item.id || i}
+                                                        initial={{ opacity: 0, y: 10 }}
+                                                        animate={{ opacity: 1, y: 0 }}
+                                                        transition={{ delay: i * 0.02 }}
+                                                        onClick={() => handleSelectMatch(item)}
+                                                        className="p-6 bg-white border border-slate-100 rounded-[2rem] hover:border-indigo-200 hover:bg-indigo-50/20 hover:shadow-xl hover:shadow-indigo-50 cursor-pointer transition-all group flex flex-col justify-between"
+                                                    >
+                                                        <div>
+                                                            <div className="flex items-center justify-between mb-4">
+                                                                <span className="font-mono font-black text-indigo-600 bg-indigo-50 px-4 py-1.5 rounded-xl text-xs group-hover:bg-indigo-600 group-hover:text-white transition-all border border-indigo-100/50">
+                                                                    {item.code}
+                                                                </span>
+                                                                <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest bg-slate-50 px-3 py-1 rounded-lg">{item.unit}</span>
+                                                            </div>
+                                                            <p className="text-slate-600 text-sm leading-relaxed font-semibold group-hover:text-slate-900 mb-6 line-clamp-3">
+                                                                {item.description}
+                                                            </p>
+                                                        </div>
+                                                        <div className="flex items-center justify-between pt-4 border-t border-slate-50">
+                                                            <div className="text-[10px] text-slate-400 font-black uppercase tracking-widest">BİRİM FİYAT</div>
+                                                            <div className="font-mono font-black text-xl text-slate-900 group-hover:text-indigo-600 transition-colors">
+                                                                {formatCurrency(item.unitPrice)}
+                                                            </div>
+                                                        </div>
+                                                    </motion.div>
+                                                ))
+                                            ) : (
+                                                <div className="col-span-full py-24 flex flex-col items-center justify-center text-slate-300">
+                                                    <Search className="w-16 h-16 mb-4 opacity-10" />
+                                                    <p className="font-bold text-lg text-slate-400">Sonuç Bulunamadı</p>
+                                                    <p className="text-sm">Lütfen farklı anahtar kelimeler deneyin.</p>
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
-
-                                {/* Results List */}
-                                <div className="flex-1 overflow-y-auto p-8 pt-4 custom-scrollbar bg-slate-50/20">
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        {filteredDataset.map((item, i) => (
-                                            <motion.div
-                                                key={item.id || i}
-                                                initial={{ opacity: 0, x: -10 }}
-                                                animate={{ opacity: 1, x: 0 }}
-                                                transition={{ delay: i * 0.03 }}
-                                                onClick={() => handleSelectMatch(item)}
-                                                className="p-6 border border-slate-100 bg-white rounded-[2rem] hover:border-cyan-500 hover:shadow-2xl hover:shadow-cyan-100/50 cursor-pointer transition-all group flex flex-col justify-between"
-                                            >
-                                                <div>
-                                                    <div className="flex items-center justify-between mb-4">
-                                                        <span className="font-mono font-black text-cyan-700 bg-cyan-50 px-4 py-1.5 rounded-xl text-xs group-hover:bg-cyan-600 group-hover:text-white transition-all border border-cyan-100/50">
-                                                            {item.code}
-                                                        </span>
-                                                        <span className="text-[10px] text-slate-400 font-black uppercase tracking-widest">{item.unit}</span>
-                                                    </div>
-                                                    <p className="text-slate-600 text-sm leading-relaxed font-bold group-hover:text-slate-900 mb-6 line-clamp-3">
-                                                        {item.description}
-                                                    </p>
-                                                </div>
-                                                <div className="flex items-center justify-between pt-4 border-t border-slate-50">
-                                                    <div className="text-[10px] text-slate-400 font-black uppercase tracking-widest">BİRİM FİYAT</div>
-                                                    <div className="font-black text-xl text-slate-900 group-hover:text-cyan-600 transition-colors">
-                                                        {formatCurrency(item.unitPrice)}
-                                                    </div>
-                                                </div>
-                                            </motion.div>
-                                        ))}
-
-                                        {filteredDataset.length === 0 && (
-                                            <div className="col-span-full py-24 text-center">
-                                                <div className="w-24 h-24 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6 text-slate-300 border border-slate-100">
-                                                    <Search className="w-10 h-10" />
-                                                </div>
-                                                <p className="text-slate-400 font-bold text-lg">Eşleşen sonuç bulunamadı.</p>
-                                                <p className="text-slate-300 text-sm mt-1">Lütfen farklı anahtar kelimeler ile tekrar deneyin.</p>
-                                            </div>
-                                        )}
-                                    </div>
-                                </div>
-                                <div className="p-8 border-t border-slate-100 bg-slate-50/50 flex items-center justify-between text-slate-400 font-bold text-xs">
+                                <div className="p-8 border-t border-slate-50 bg-slate-50/50 flex items-center justify-between text-slate-400 font-black text-[10px] tracking-widest">
                                     <span>TOPLAM {filteredDataset.length} SONUÇ GÖSTERİLİYOR</span>
-                                    <span className="uppercase tracking-widest">Maliyet724 • Akıllı Arama</span>
+                                    <div className="flex items-center gap-2">
+                                        <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]"></div>
+                                        CANLI VERİ SETİ
+                                    </div>
                                 </div>
                             </motion.div>
                         </motion.div>
@@ -1498,108 +1445,104 @@ export default function AnalysisPage() {
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
-                            className="fixed inset-0 bg-slate-900/40 backdrop-blur-xl z-[100] flex items-center justify-center p-4"
+                            className="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-[110] flex items-center justify-center p-4"
                             onClick={() => setSaveModalOpen(false)}
                         >
                             <motion.div
                                 initial={{ scale: 0.95, opacity: 0, y: 20 }}
                                 animate={{ scale: 1, opacity: 1, y: 0 }}
                                 exit={{ scale: 0.95, opacity: 0, y: 20 }}
-                                className="bg-white rounded-[3rem] shadow-2xl w-full max-w-xl overflow-hidden border border-slate-100"
+                                className="bg-white rounded-[3rem] shadow-2xl w-full max-w-xl overflow-hidden border border-slate-100 relative"
                                 onClick={e => e.stopPropagation()}
                             >
-                                <div className="p-10 border-b border-slate-50 flex justify-between items-center bg-slate-50/50">
-                                    <div className="flex items-center gap-4">
-                                        <div className="p-3 bg-cyan-600 text-white rounded-2xl shadow-xl shadow-cyan-100">
-                                            <Save className="w-6 h-6" />
+                                <div className="absolute inset-0 bg-gradient-to-br from-indigo-50/20 to-transparent pointer-events-none"></div>
+
+                                <div className="p-10">
+                                    <div className="flex flex-col items-center text-center mb-10">
+                                        <div className="w-20 h-20 bg-indigo-600 rounded-3xl flex items-center justify-center text-white mb-6 shadow-xl shadow-indigo-600/20">
+                                            <FolderPlus className="w-10 h-10" />
                                         </div>
-                                        <h3 className="font-black text-2xl text-slate-900 tracking-tight">Projeyi Kaydet</h3>
-                                    </div>
-                                    <button
-                                        onClick={() => setSaveModalOpen(false)}
-                                        className="p-3 hover:bg-white rounded-2xl transition-all text-slate-400 hover:text-rose-500 border border-transparent hover:border-slate-100"
-                                    >
-                                        <X className="w-6 h-6" />
-                                    </button>
-                                </div>
-                                <div className="p-10 space-y-8">
-                                    <div className="space-y-2">
-                                        <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-1">Proje Başlığı</label>
-                                        <input
-                                            className="w-full p-5 border border-slate-100 rounded-2xl bg-slate-50/50 focus:bg-white focus:border-cyan-500 focus:ring-8 focus:ring-cyan-500/5 transition-all outline-none font-bold text-slate-700 shadow-inner"
-                                            placeholder="Örn: Kuzey Marmara Otoyolu Viyadük İmalatı"
-                                            value={projectName}
-                                            onChange={e => setProjectName(e.target.value)}
-                                        />
+                                        <h2 className="text-3xl font-bold text-slate-900 mb-2 tracking-tight uppercase italic">Projeyi Kaydet</h2>
+                                        <p className="text-slate-500 font-medium text-sm">Bu analizi profilinize kaydederek dilediğiniz zaman erişebilirsiniz.</p>
                                     </div>
 
-                                    {/* IKN INPUTS */}
-                                    <div className="space-y-2">
-                                        <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-1">İhale Kayıt Numarası (İKN)</label>
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-1/3 relative">
-                                                <select
-                                                    className="w-full p-5 border border-slate-100 rounded-2xl bg-slate-50/50 focus:bg-white focus:border-cyan-500 transition-all appearance-none cursor-pointer font-bold text-slate-700 outline-none"
-                                                    value={iknYear}
-                                                    onChange={e => setIknYear(e.target.value)}
-                                                >
-                                                    {Array.from({ length: 11 }, (_, i) => new Date().getFullYear() - i + 1).map(year => (
-                                                        <option key={year} value={year}>{year}</option>
-                                                    ))}
-                                                </select>
-                                                <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
-                                                    <ChevronDown className="w-4 h-4" />
+                                    <div className="space-y-6">
+                                        <div className="space-y-2">
+                                            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">PROJE ADI</label>
+                                            <input
+                                                autoFocus
+                                                type="text"
+                                                placeholder="Örn: Konut İnşaatı Metrajı"
+                                                className="w-full bg-slate-50 border border-slate-100 rounded-2xl px-6 py-4 font-black text-slate-900 outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/5 transition-all h-16"
+                                                value={projectName}
+                                                onChange={e => setProjectName(e.target.value)}
+                                            />
+                                        </div>
+
+                                        <div className="space-y-2">
+                                            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">İHALE KAYIT NUMARASI (İKN)</label>
+                                            <div className="flex items-center gap-3">
+                                                <div className="w-1/3 relative">
+                                                    <select
+                                                        className="w-full h-16 pl-6 pr-10 border border-slate-100 rounded-2xl bg-slate-50 font-bold text-slate-700 outline-none focus:border-indigo-500 transition-all appearance-none cursor-pointer"
+                                                        value={iknYear}
+                                                        onChange={e => setIknYear(e.target.value)}
+                                                    >
+                                                        {Array.from({ length: 11 }, (_, i) => new Date().getFullYear() - i + 1).map(year => (
+                                                            <option key={year} value={year}>{year}</option>
+                                                        ))}
+                                                    </select>
+                                                    <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                                                        <ChevronDown className="w-4 h-4" />
+                                                    </div>
+                                                </div>
+                                                <span className="text-slate-300 font-black text-2xl">/</span>
+                                                <div className="flex-1">
+                                                    <input
+                                                        className="w-full h-16 px-6 border border-slate-100 rounded-2xl bg-slate-50 focus:bg-white focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/5 transition-all outline-none font-bold text-slate-700"
+                                                        placeholder="Kayıt No"
+                                                        value={iknNumber}
+                                                        onChange={e => {
+                                                            const val = e.target.value.replace(/[^0-9]/g, '');
+                                                            setIknNumber(val);
+                                                        }}
+                                                        maxLength={10}
+                                                    />
                                                 </div>
                                             </div>
-                                            <span className="text-slate-300 font-black text-2xl">/</span>
-                                            <div className="flex-1">
-                                                <input
-                                                    className="w-full p-5 border border-slate-100 rounded-2xl bg-slate-50/50 focus:bg-white focus:border-cyan-500 focus:ring-8 focus:ring-cyan-500/5 transition-all outline-none font-bold text-slate-700 shadow-inner"
-                                                    placeholder="Kayıt No"
-                                                    value={iknNumber}
-                                                    onChange={e => {
-                                                        const val = e.target.value.replace(/[^0-9]/g, '');
-                                                        setIknNumber(val);
-                                                    }}
-                                                    maxLength={10}
-                                                />
-                                            </div>
+                                        </div>
+
+                                        <div className="space-y-2">
+                                            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">PROJE AÇIKLAMASI</label>
+                                            <textarea
+                                                className="w-full p-6 border border-slate-100 rounded-2xl bg-slate-50 focus:bg-white focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/5 transition-all outline-none min-h-[120px] resize-none font-medium text-slate-700"
+                                                placeholder="Proje hakkında kısa notlar ekleyin..."
+                                                value={projectDescription}
+                                                onChange={e => setProjectDescription(e.target.value)}
+                                            />
                                         </div>
                                     </div>
-                                    <div className="space-y-2">
-                                        <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-1">Detaylı Açıklama</label>
-                                        <textarea
-                                            className="w-full p-5 border border-slate-100 rounded-2xl bg-slate-50/50 focus:bg-white focus:border-cyan-500 focus:ring-8 focus:ring-cyan-500/5 transition-all outline-none min-h-[120px] resize-none font-bold text-slate-700 shadow-inner"
-                                            placeholder="Proje kapsamı, özel notlar ve diğer detaylar..."
-                                            value={projectDescription}
-                                            onChange={e => setProjectDescription(e.target.value)}
-                                        />
+
+                                    <div className="mt-12 flex gap-4">
+                                        <button
+                                            onClick={() => setSaveModalOpen(false)}
+                                            className="flex-1 py-4 rounded-2xl font-bold text-slate-500 hover:bg-slate-50 transition-all border border-transparent hover:border-slate-100"
+                                        >
+                                            Vazgeç
+                                        </button>
+                                        <button
+                                            disabled={!projectName.trim() || saving}
+                                            onClick={handleSaveProject}
+                                            className="flex-[2] py-4 rounded-2xl font-black text-white bg-indigo-600 hover:bg-indigo-700 shadow-lg shadow-indigo-600/20 disabled:bg-slate-200 transition-all flex items-center justify-center gap-2 active:scale-95"
+                                        >
+                                            {saving ? (
+                                                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                                            ) : (
+                                                <CheckCircle className="w-5 h-5" />
+                                            )}
+                                            KAYDI TAMAMLA
+                                        </button>
                                     </div>
-                                </div>
-                                <div className="p-10 pt-4 border-t border-slate-50 bg-slate-50/30 flex justify-end gap-4">
-                                    <button
-                                        onClick={() => setSaveModalOpen(false)}
-                                        className="px-8 py-4 text-slate-500 font-black hover:bg-white rounded-2xl transition-all text-xs uppercase tracking-widest border border-transparent hover:border-slate-100"
-                                    >
-                                        İPTAL
-                                    </button>
-                                    <button
-                                        onClick={handleSaveProject}
-                                        disabled={saving}
-                                        className="px-10 py-4 bg-gradient-to-r from-cyan-600 to-teal-600 hover:to-teal-500 text-white rounded-2xl font-black transition-all shadow-xl shadow-cyan-100 disabled:opacity-70 disabled:cursor-not-allowed flex items-center gap-3 text-xs uppercase tracking-[0.2em] hover:-translate-y-1 active:scale-95"
-                                    >
-                                        {saving ? (
-                                            <>
-                                                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                                                İŞLENİYOR
-                                            </>
-                                        ) : (
-                                            <>
-                                                <Save className="w-4 h-4" />
-                                                PROJEYİ KAYDET
-                                            </>
-                                        )}
-                                    </button>
                                 </div>
                             </motion.div>
                         </motion.div>
