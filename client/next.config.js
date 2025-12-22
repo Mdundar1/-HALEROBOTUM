@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+    output: 'export',
+    distDir: '../server/public',
+    trailingSlash: true,
     images: {
         unoptimized: true
     },
