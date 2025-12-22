@@ -935,10 +935,8 @@ export default function AnalysisPage() {
                             transition={{ duration: 0.8 }}
                         >
                             <div className="flex items-center gap-3 mb-1">
-                                <div className="p-2.5 bg-gradient-to-tr from-blue-600 to-indigo-600 rounded-xl text-white shadow-xl shadow-indigo-100">
-                                    <Calculator className="w-6 h-6" />
-                                </div>
-                                <h1 className="text-3xl font-black text-slate-900 tracking-tight leading-none lowercase italic animate-brand-glow">maliyet<span className="text-indigo-600 font-black italic">724</span> <span className="text-slate-400 font-bold ml-1 uppercase text-lg italic tracking-widest no-italic">Analiz</span></h1>
+                                <Logo className="scale-90 -ml-2" animated={false} />
+                                <span className="text-slate-400 font-bold ml-1 uppercase text-lg italic tracking-widest no-italic">Analiz</span>
                             </div>
                             <p className="text-slate-500 text-sm ml-1 font-medium">
                                 Proje detaylarını görüntüleyin ve maliyet raporlarınızı yönetin.
@@ -1140,7 +1138,9 @@ export default function AnalysisPage() {
                                         <li className="flex gap-5 group">
                                             <div className="w-10 h-10 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center font-black text-slate-400 text-sm shrink-0 group-hover:bg-indigo-600 group-hover:text-white group-hover:border-indigo-600 transition-all shadow-sm">02</div>
                                             <div>
-                                                <h5 className="font-black text-slate-800 text-sm mb-1 uppercase tracking-tight">maliyet724 Analizi</h5>
+                                                <div className="flex items-center gap-2 mb-1">
+                                                    <Logo className="scale-75 -ml-4" animated={false} />
+                                                </div>
                                                 <p className="text-xs text-slate-500 font-medium leading-relaxed">Sistem metraj kalemlerini otomatik olarak tanır ve en yakın pozlarla eşleştirir.</p>
                                             </div>
                                         </li>

@@ -177,8 +177,10 @@ function LandingContent() {
                             >
                                 <motion.div
                                     initial={{ opacity: 0 }}
-                                    animate={{ opacity: 1 }}
-                                    transition={{ delay: 0.2 }}
+                                    animate={{
+                                        opacity: 1,
+                                        transition: { delay: 0.2 }
+                                    }}
                                     className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-900/5 border border-slate-200 text-[11px] font-black text-slate-500 uppercase tracking-[0.3em] mb-10 shadow-sm"
                                 >
                                     <span className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse"></span>
