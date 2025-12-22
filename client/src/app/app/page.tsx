@@ -9,7 +9,7 @@ import Logo from '../../components/Logo';
 import { useAuth } from '../../context/AuthContext';
 import * as XLSX from 'xlsx';
 import {
-    ArrowUpRight, BarChart3, PieChart, Clock, Plus, X, ArrowRight,
+    ArrowUpRight, BarChart3, PieChart, Clock, Plus, X, ArrowRight, Info,
     Calculator, Trash2, Download, Save, FileText, Upload, AlertCircle,
     CheckCircle, Filter, Search, Edit2, ChevronDown, FolderPlus
 } from 'lucide-react';
@@ -1017,6 +1017,27 @@ export default function AnalysisPage() {
                                 </motion.div>
                             )}
 
+                            {!isLoggedIn && (
+                                <motion.div
+                                    initial={{ opacity: 0, y: -10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    className="mb-8 p-6 bg-indigo-50 border border-indigo-100 rounded-3xl flex items-start gap-4 shadow-sm"
+                                >
+                                    <div className="p-2.5 bg-indigo-100 text-indigo-600 rounded-xl">
+                                        <Info className="w-5 h-5" />
+                                    </div>
+                                    <div>
+                                        <h4 className="font-bold text-indigo-900 mb-1">Misafir Kullanıcı</h4>
+                                        <p className="text-indigo-700 text-sm font-medium mb-3">
+                                            Maliyet analizlerini tam yetkiyle görüntülemek ve kaydetmek için giriş yapmalı ve bir paket satın almalısınız.
+                                        </p>
+                                        <Link href="/?auth=login" className="text-indigo-600 font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 hover:gap-2 transition-all">
+                                            Giriş Yap <ArrowRight className="w-4 h-4" />
+                                        </Link>
+                                    </div>
+                                </motion.div>
+                            )}
+
                             {/* Main Upload Workspace */}
                             <motion.div
                                 initial={{ opacity: 0, scale: 0.98 }}
@@ -1127,8 +1148,17 @@ export default function AnalysisPage() {
                                     </div>
                                     <div className="relative z-10">
                                         <div className="text-indigo-400 font-black text-xs mb-4 uppercase tracking-[0.3em]">TAHMİNİ TOPLAM MALİYET</div>
-                                        <div className={`text-5xl font-black font-mono tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-white via-indigo-100 to-white ${!hasActiveSubscription ? 'blur-md' : ''}`}>
-                                            {hasActiveSubscription ? formatCurrency(calculateTotalCost()) : '***.***.*** TL'}
+                                        <div className="relative group">
+                                            <div className={`text-5xl font-black font-mono tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-white via-indigo-100 to-white ${!hasActiveSubscription ? 'blur-md' : ''}`}>
+                                                {hasActiveSubscription ? formatCurrency(calculateTotalCost()) : '***.***.*** TL'}
+                                            </div>
+                                            {!hasActiveSubscription && (
+                                                <div className="absolute inset-0 flex items-center justify-center">
+                                                    <span className="text-[10px] font-black uppercase tracking-widest bg-rose-600 text-white px-4 py-2 rounded-xl shadow-lg animate-bounce text-center leading-tight max-w-[200px]">
+                                                        Maliyeti görmek için paket satın almanız gerekmektedir
+                                                    </span>
+                                                </div>
+                                            )}
                                         </div>
                                         <div className="mt-10 flex items-center gap-3 text-xs">
                                             <span className="bg-indigo-500/20 px-4 py-2 rounded-xl text-indigo-300 font-black border border-indigo-500/20 uppercase tracking-widest">{results.length} KALEM ANALİZ EDİLDİ</span>
