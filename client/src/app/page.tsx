@@ -579,8 +579,8 @@ function LandingContent() {
                                 <div className="bg-slate-900/80 backdrop-blur-md p-1.5 rounded-2xl border border-slate-800 inline-flex relative">
                                     {[
                                         { id: 'monthly', label: '1 AYLIK' },
-                                        { id: 'quarterly', label: '3 AYLIK', promo: '%16 TASARRUF' },
-                                        { id: 'annual', label: '12 AYLIK', promo: '%41+ TASARRUF' }
+                                        { id: 'quarterly', label: '3 AYLIK', promo: '%17 TASARRUF' },
+                                        { id: 'annual', label: '12 AYLIK', promo: '%44\'E VARAN TASARRUF' }
                                     ].map((cycle) => (
                                         <button
                                             key={cycle.id}
@@ -622,7 +622,7 @@ function LandingContent() {
                                 {
                                     name: 'Standart',
                                     prices: { monthly: '₺999', quarterly: '₺833', annual: '₺583' },
-                                    originalPrices: { quarterly: '₺999', annual: '₺999' },
+                                    originalPrices: { monthly: '₺999', quarterly: '₺999', annual: '₺999' },
                                     totals: { monthly: '₺999', quarterly: '₺2.499', annual: '₺6.999' },
                                     desc: 'Şahıs projeleri için.',
                                     features: ['Standart Raporlama', 'Poz Arama Motoru', '10 Adet Maliyet Analizi']
@@ -630,7 +630,7 @@ function LandingContent() {
                                 {
                                     name: 'Profesyonel',
                                     prices: { monthly: '₺1.199', quarterly: '₺999', annual: '₺667' },
-                                    originalPrices: { quarterly: '₺1.199', annual: '₺1.199' },
+                                    originalPrices: { monthly: '₺1.199', quarterly: '₺1.199', annual: '₺1.199' },
                                     totals: { monthly: '₺1.199', quarterly: '₺2.999', annual: '₺7.999' },
                                     desc: 'Profesyonel ekipler.',
                                     features: ['Sınırsız Proje', '7/24 Öncelikli Destek', 'Güncel Birim Fiyatlar', 'Excel Raporlama', 'Sınırsız Analiz'],
@@ -687,13 +687,27 @@ function LandingContent() {
                                                             <span className="text-slate-500 text-sm font-medium">/ay</span>
                                                         </div>
                                                         {(billingCycle === 'quarterly' || billingCycle === 'annual') && plan.originalPrices && (
-                                                            <div className="mt-2 text-rose-400 text-xs font-bold line-through opacity-80">
-                                                                {plan.originalPrices[billingCycle as keyof typeof plan.originalPrices]}
-                                                            </div>
-                                                        )}
-                                                        {(billingCycle === 'quarterly' || billingCycle === 'annual') && plan.totals && (
-                                                            <div className="mt-2 text-emerald-400 text-[10px] font-bold uppercase tracking-wider">
-                                                                Toplam: {plan.totals[billingCycle as keyof typeof plan.totals]}
+                                                            <div className="mt-4 space-y-2">
+                                                                <div className="flex items-center gap-2">
+                                                                    <span className="text-rose-400 text-xs font-bold line-through opacity-80">
+                                                                        {plan.originalPrices[billingCycle as keyof typeof plan.originalPrices]}
+                                                                    </span>
+                                                                    <span className="px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-500 text-[9px] font-black uppercase tracking-wider border border-emerald-500/20">
+                                                                        {(() => {
+                                                                            const monthly = parseInt(plan.originalPrices.monthly?.replace('₺', '').replace('.', '') || '0');
+                                                                            const currentSub = parseInt(plan.prices[billingCycle as keyof typeof plan.prices]?.replace('₺', '').replace('.', '') || '0');
+                                                                            if (!monthly || !currentSub) return '';
+                                                                            const saving = Math.round(((monthly - currentSub) / monthly) * 100);
+                                                                            return `-%${saving} TASARRUF`;
+                                                                        })()}
+                                                                    </span>
+                                                                </div>
+                                                                {plan.totals && (
+                                                                    <div className="text-emerald-400 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5">
+                                                                        <div className="w-1 h-1 rounded-full bg-emerald-500"></div>
+                                                                        Toplam: {plan.totals[billingCycle as keyof typeof plan.totals]}
+                                                                    </div>
+                                                                )}
                                                             </div>
                                                         )}
                                                     </div>
