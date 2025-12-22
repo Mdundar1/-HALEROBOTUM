@@ -1434,59 +1434,87 @@ app.post('/api/dataset/upload', authenticateToken, requireAdmin, upload.single('
 
         if (req.file) {
             const buffer = req.file.buffer;
-            let items: any[] = [];
+            let itemsToUpsert: any[] = [];
 
             // Parse Excel
             if (req.file.originalname.match(/\.(xlsx|xls)$/i)) {
-                const XLSX = require('xlsx');
-                const workbook = XLSX.read(buffer, { type: 'buffer' });
-                const sheetName = workbook.SheetNames[0];
-                const sheet = workbook.Sheets[sheetName];
-                const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+                try {
+                    const XLSX = require('xlsx');
+                    const workbook = XLSX.read(buffer, { type: 'buffer' });
+                    const sheetName = workbook.SheetNames[0];
+                    const sheet = workbook.Sheets[sheetName];
+                    const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
 
-                for (let i = 1; i < jsonData.length; i++) {
-                    const row: any = jsonData[i];
-                    if (row && row.length >= 2) {
-                        items.push({
-                            code: row[0]?.toString().trim(),
-                            description: row[1]?.toString().trim(),
-                            unit: row[2]?.toString().trim(),
-                            unit_price: parseFloat(row[3]) || 0
-                        });
+                    console.log(`Excel parsed: ${jsonData.length} rows found.`);
+
+                    for (let i = 1; i < jsonData.length; i++) {
+                        const row: any = jsonData[i];
+                        if (row && row.length >= 2) {
+                            const code = row[0]?.toString().trim();
+                            const description = row[1]?.toString().trim();
+
+                            if (code && description) {
+                                itemsToUpsert.push({
+                                    code,
+                                    description,
+                                    unit: row[2]?.toString().trim() || '',
+                                    unit_price: parseFloat(row[3]) || 0
+                                });
+                            }
+                        }
                     }
+                } catch (err: any) {
+                    console.error('Excel parse error:', err);
+                    return res.status(400).json({ error: 'Excel dosyası işlenemedi: ' + err.message });
                 }
             } else if (req.file.originalname.match(/\.json$/i)) {
-                const jsonContent = JSON.parse(buffer.toString('utf-8'));
-                if (Array.isArray(jsonContent)) {
-                    items = jsonContent;
-                } else if (jsonContent.items && Array.isArray(jsonContent.items)) {
-                    items = jsonContent.items;
+                try {
+                    const jsonContent = JSON.parse(buffer.toString('utf-8'));
+                    const rawItems = Array.isArray(jsonContent) ? jsonContent : (jsonContent.items || []);
+
+                    itemsToUpsert = rawItems
+                        .filter((item: any) => item.code && item.description)
+                        .map((item: any) => ({
+                            code: item.code.toString().trim(),
+                            description: item.description.toString().trim(),
+                            unit: item.unit?.toString().trim() || '',
+                            unit_price: item.unitPrice || item.unit_price || 0
+                        }));
+                } catch (err: any) {
+                    console.error('JSON parse error:', err);
+                    return res.status(400).json({ error: 'JSON dosyası işlenemedi: ' + err.message });
                 }
             }
 
-            if (items.length > 0) {
-                let addedCount = 0;
-                for (const item of items) {
-                    if (!item.code || !item.description) continue;
+            if (itemsToUpsert.length > 0) {
+                console.log(`Attempting bulk upsert for ${itemsToUpsert.length} items...`);
 
-                    const { error } = await supabase
-                        .from('poz_items')
-                        .upsert({
-                            code: item.code,
-                            description: item.description,
-                            unit: item.unit || '',
-                            unit_price: item.unitPrice || item.unit_price || 0
-                        }, { onConflict: 'code' });
+                // Bulk upsert into Supabase
+                const { data, error } = await supabase
+                    .from('poz_items')
+                    .upsert(itemsToUpsert, { onConflict: 'code' })
+                    .select();
 
-                    if (!error) addedCount++;
+                if (error) {
+                    console.error('Supabase bulk upsert error:', error);
+                    return res.status(500).json({ error: 'Veritabanı hatası: ' + error.message });
                 }
+
+                const addedCount = data ? data.length : itemsToUpsert.length;
+                console.log(`Bulk upsert successful: ${addedCount} items processed.`);
 
                 // Reload dataset cache
                 await loadDataset();
 
-                return res.json({ success: true, addedCount, message: `${addedCount} kayıt eklendi.` });
+                return res.json({
+                    success: true,
+                    addedCount,
+                    message: `${addedCount} kayıt başarıyla güncellendi/eklendi.`
+                });
             } else {
-                return res.status(400).json({ error: 'Dosyadan veri okunamadı veya format hatalı.' });
+                return res.status(400).json({
+                    error: 'Dosyada geçerli veri bulunamadı. Lütfen Poz No (A sütunu) ve Tanım (B sütunu) alanlarının dolu olduğundan emin olun.'
+                });
             }
         }
 
