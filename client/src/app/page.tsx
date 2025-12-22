@@ -33,6 +33,26 @@ import Navigation from '../components/Navigation';
 import Logo from '../components/Logo';
 import { useAuth } from '../context/AuthContext';
 
+interface Plan {
+    id: string;
+    name: string;
+    price: number;
+    duration_months: number;
+    features: any;
+    is_active: number | boolean;
+    discount_percent?: number;
+    tag?: string;
+}
+
+interface PlanGroup {
+    name: string;
+    tag?: string;
+    features: string[];
+    variants: Plan[];
+    special?: boolean;
+    desc?: string;
+}
+
 function LandingContent() {
     const { login, register, isLoggedIn, user } = useAuth();
     const router = useRouter();
@@ -88,7 +108,57 @@ function LandingContent() {
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [rememberMe, setRememberMe] = useState(false);
 
+    // Dynamic Plans from API
+    const [apiPlanGroups, setApiPlanGroups] = useState<PlanGroup[]>([]);
+    const [loadingPlans, setLoadingPlans] = useState(true);
+
     useEffect(() => {
+        const fetchPlans = async () => {
+            try {
+                const res = await fetch('/api/subscription/plans');
+                if (res.ok) {
+                    const data = await res.json();
+
+                    // Group by Name (matching Admin logic)
+                    const groups: Record<string, PlanGroup> = {};
+                    data.forEach((plan: Plan) => {
+                        if (!groups[plan.name]) {
+                            // Map existing hardcoded descriptions for visual consistency
+                            const descs: Record<string, string> = {
+                                'Standart': 'Şahıs projeleri için.',
+                                'Profesyonel': 'Profesyonel ekipler.',
+                                'Kurumsal': 'Büyük ölçekli yapılar.'
+                            };
+
+                            groups[plan.name] = {
+                                name: plan.name,
+                                tag: plan.tag,
+                                features: typeof plan.features === 'string' ? JSON.parse(plan.features || '[]') : (plan.features || []),
+                                variants: [],
+                                special: plan.name === 'Profesyonel', // Mark as popüler
+                                desc: descs[plan.name] || ''
+                            };
+                        }
+                        groups[plan.name].variants.push(plan);
+                    });
+
+                    // Sort variants by duration
+                    const groupArray = Object.values(groups).map(g => {
+                        g.variants.sort((a, b) => a.duration_months - b.duration_months);
+                        return g;
+                    });
+
+                    setApiPlanGroups(groupArray);
+                }
+            } catch (error) {
+                console.error('Error fetching plans:', error);
+            } finally {
+                setLoadingPlans(false);
+            }
+        };
+
+        fetchPlans();
+
         const savedEmail = localStorage.getItem('remembered_email');
         const savedPassword = localStorage.getItem('remembered_password');
         if (savedEmail && savedPassword) {
@@ -579,8 +649,42 @@ function LandingContent() {
                                 <div className="bg-slate-900/80 backdrop-blur-md p-1.5 rounded-2xl border border-slate-800 inline-flex relative">
                                     {[
                                         { id: 'monthly', label: '1 AYLIK' },
-                                        { id: 'quarterly', label: '3 AYLIK', promo: '%17 TASARRUF' },
-                                        { id: 'annual', label: '12 AYLIK', promo: '%44\'E VARAN TASARRUF' }
+                                        {
+                                            id: 'quarterly', label: '3 AYLIK', promo: (() => {
+                                                const plans = apiPlanGroups.length > 0 ? apiPlanGroups : [
+                                                    { name: 'Standart', variants: [{ duration_months: 1, price: 999 }, { duration_months: 3, price: 833 }] },
+                                                    { name: 'Profesyonel', variants: [{ duration_months: 1, price: 1199 }, { duration_months: 3, price: 999 }] }
+                                                ];
+                                                let maxSaving = 0;
+                                                plans.forEach((g: any) => {
+                                                    const monthly = g.variants.find((v: any) => v.duration_months === 1);
+                                                    const quarterly = g.variants.find((v: any) => v.duration_months === 3);
+                                                    if (monthly?.price && quarterly?.price) {
+                                                        const saving = Math.round(((monthly.price - quarterly.price) / monthly.price) * 100);
+                                                        if (saving > maxSaving) maxSaving = saving;
+                                                    }
+                                                });
+                                                return maxSaving > 0 ? `%${maxSaving} TASARRUF` : null;
+                                            })()
+                                        },
+                                        {
+                                            id: 'annual', label: '12 AYLIK', promo: (() => {
+                                                const plans = apiPlanGroups.length > 0 ? apiPlanGroups : [
+                                                    { name: 'Standart', variants: [{ duration_months: 1, price: 999 }, { duration_months: 12, price: 583 }] },
+                                                    { name: 'Profesyonel', variants: [{ duration_months: 1, price: 1199 }, { duration_months: 12, price: 667 }] }
+                                                ];
+                                                let maxSaving = 0;
+                                                plans.forEach((g: any) => {
+                                                    const monthly = g.variants.find((v: any) => v.duration_months === 1);
+                                                    const annual = g.variants.find((v: any) => v.duration_months === 12);
+                                                    if (monthly?.price && annual?.price) {
+                                                        const saving = Math.round(((monthly.price - annual.price) / monthly.price) * 100);
+                                                        if (saving > maxSaving) maxSaving = saving;
+                                                    }
+                                                });
+                                                return maxSaving > 0 ? `%${maxSaving}'E VARAN TASARRUF` : null;
+                                            })()
+                                        }
                                     ].map((cycle) => (
                                         <button
                                             key={cycle.id}
@@ -618,31 +722,50 @@ function LandingContent() {
                             viewport={{ once: true }}
                             className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto items-start"
                         >
-                            {[
+                            {(apiPlanGroups.length > 0 ? apiPlanGroups : [
                                 {
                                     name: 'Standart',
-                                    prices: { monthly: '₺999', quarterly: '₺833', annual: '₺583' },
-                                    originalPrices: { monthly: '₺999', quarterly: '₺999', annual: '₺999' },
-                                    totals: { monthly: '₺999', quarterly: '₺2.499', annual: '₺6.999' },
+                                    variants: [
+                                        { duration_months: 1, price: 999, is_active: true } as Plan,
+                                        { duration_months: 3, price: 833, is_active: true } as Plan,
+                                        { duration_months: 12, price: 583, is_active: true } as Plan,
+                                    ],
                                     desc: 'Şahıs projeleri için.',
                                     features: ['Standart Raporlama', 'Poz Arama Motoru', '10 Adet Maliyet Analizi']
                                 },
                                 {
                                     name: 'Profesyonel',
-                                    prices: { monthly: '₺1.199', quarterly: '₺999', annual: '₺667' },
-                                    originalPrices: { monthly: '₺1.199', quarterly: '₺1.199', annual: '₺1.199' },
-                                    totals: { monthly: '₺1.199', quarterly: '₺2.999', annual: '₺7.999' },
+                                    variants: [
+                                        { duration_months: 1, price: 1199, is_active: true } as Plan,
+                                        { duration_months: 3, price: 999, is_active: true } as Plan,
+                                        { duration_months: 12, price: 667, is_active: true } as Plan,
+                                    ],
                                     desc: 'Profesyonel ekipler.',
                                     features: ['Sınırsız Proje', '7/24 Öncelikli Destek', 'Güncel Birim Fiyatlar', 'Excel Raporlama', 'Sınırsız Analiz'],
                                     special: true
                                 },
                                 {
                                     name: 'Kurumsal',
-                                    prices: { monthly: 'Bize Ulaşın' },
+                                    variants: [],
                                     desc: 'Büyük ölçekli yapılar.',
                                     features: ['API Erişimi', 'Çoklu Kullanıcı', 'Özel Entegrasyon', 'Metraj Servisleri', 'Danışmanlık']
                                 }
-                            ].map((plan, idx) => (
+                            ]).map((plan: any) => {
+                                // Add helper data for rendering compatible with current UI
+                                const getVariant = (months: number) => plan.variants?.find((v: any) => v.duration_months === months);
+                                const monthly = getVariant(1);
+                                const current = getVariant(billingCycle === 'annual' ? 12 : billingCycle === 'quarterly' ? 3 : 1);
+
+                                return {
+                                    ...plan,
+                                    displayPrice: current ? `₺${current.price.toLocaleString('tr-TR')}` : (plan.name === 'Kurumsal' ? 'Bize Ulaşın' : '---'),
+                                    originalPrice: monthly?.price && current?.price && current.price < monthly.price ? `₺${monthly.price.toLocaleString('tr-TR')}` : null,
+                                    totalPrice: current ? `₺${(current.price * (current.duration_months)).toLocaleString('tr-TR')}` : null,
+                                    saving: monthly?.price && current?.price && current.price < monthly.price
+                                        ? Math.round(((monthly.price - current.price) / monthly.price) * 100)
+                                        : null
+                                };
+                            }).map((plan, idx) => (
                                 <motion.div
                                     key={idx}
                                     variants={fadeInUp}
@@ -676,36 +799,30 @@ function LandingContent() {
 
                                             {/* Price */}
                                             <div className="mb-8 min-h-[80px]">
-                                                {plan.name === 'Kurumsal' ? (
+                                                {plan.displayPrice === 'Bize Ulaşın' ? (
                                                     <span className="text-3xl font-bold text-white tracking-tight">Bize Ulaşın</span>
                                                 ) : (
                                                     <div>
                                                         <div className="flex items-baseline gap-1">
                                                             <span className="text-4xl lg:text-5xl font-bold text-white tracking-tight">
-                                                                {plan.prices[billingCycle as keyof typeof plan.prices] || plan.prices['monthly']}
+                                                                {plan.displayPrice}
                                                             </span>
                                                             <span className="text-slate-500 text-sm font-medium">/ay</span>
                                                         </div>
-                                                        {(billingCycle === 'quarterly' || billingCycle === 'annual') && plan.originalPrices && (
+                                                        {plan.saving && (
                                                             <div className="mt-4 space-y-2">
                                                                 <div className="flex items-center gap-2">
                                                                     <span className="text-rose-400 text-xs font-bold line-through opacity-80">
-                                                                        {plan.originalPrices[billingCycle as keyof typeof plan.originalPrices]}
+                                                                        {plan.originalPrice}
                                                                     </span>
                                                                     <span className="px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-500 text-[9px] font-black uppercase tracking-wider border border-emerald-500/20">
-                                                                        {(() => {
-                                                                            const monthly = parseInt(plan.originalPrices.monthly?.replace('₺', '').replace('.', '') || '0');
-                                                                            const currentSub = parseInt(plan.prices[billingCycle as keyof typeof plan.prices]?.replace('₺', '').replace('.', '') || '0');
-                                                                            if (!monthly || !currentSub) return '';
-                                                                            const saving = Math.round(((monthly - currentSub) / monthly) * 100);
-                                                                            return `-%${saving} TASARRUF`;
-                                                                        })()}
+                                                                        -%{plan.saving} TASARRUF
                                                                     </span>
                                                                 </div>
-                                                                {plan.totals && (
+                                                                {plan.totalPrice && (
                                                                     <div className="text-emerald-400 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5">
                                                                         <div className="w-1 h-1 rounded-full bg-emerald-500"></div>
-                                                                        Toplam: {plan.totals[billingCycle as keyof typeof plan.totals]}
+                                                                        Toplam: {plan.totalPrice}
                                                                     </div>
                                                                 )}
                                                             </div>
@@ -719,10 +836,9 @@ function LandingContent() {
 
                                             {/* Features */}
                                             <ul className="space-y-4 mb-8 flex-1">
-                                                {plan.features.map((f, i) => (
+                                                {(plan.features || []).map((f: string, i: number) => (
                                                     <li key={i} className="flex items-start gap-3">
-                                                        <div className={`mt-0.5 w-5 h-5 rounded-full flex items-center justify-center shrink-0 ${plan.special ? 'bg-indigo-500/20 text-indigo-400' : 'bg-slate-800 text-slate-400'
-                                                            }`}>
+                                                        <div className={`mt-0.5 w-5 h-5 rounded-full flex items-center justify-center shrink-0 ${plan.special ? 'bg-indigo-500/20 text-indigo-400' : 'bg-slate-800 text-slate-400'}`}>
                                                             <Check className="w-3 h-3" strokeWidth={3} />
                                                         </div>
                                                         <span className="text-[13px] text-slate-300 font-medium leading-tight">
