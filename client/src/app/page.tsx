@@ -169,8 +169,11 @@ function LandingContent() {
                         <div className="grid lg:grid-cols-2 gap-20 items-center">
                             <motion.div
                                 initial={{ opacity: 0, y: 30 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                                animate={{
+                                    opacity: 1,
+                                    y: 0,
+                                    transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] }
+                                }}
                             >
                                 <motion.div
                                     initial={{ opacity: 0 }}
@@ -179,7 +182,8 @@ function LandingContent() {
                                     className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-900/5 border border-slate-200 text-[11px] font-black text-slate-500 uppercase tracking-[0.3em] mb-10 shadow-sm"
                                 >
                                     <span className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse"></span>
-                                    maliyet724 AI Destekli Metraj Çözümleri
+                                    <Logo className="scale-[0.4] -mx-8 -my-2" animated={false} />
+                                    AI Destekli Metraj Çözümleri
                                 </motion.div>
                                 <motion.h1
                                     variants={fadeInUp}
@@ -220,8 +224,12 @@ function LandingContent() {
 
                             <motion.div
                                 initial={{ opacity: 0, scale: 0.95, x: 30 }}
-                                animate={{ opacity: 1, scale: 1, x: 0 }}
-                                transition={{ duration: 1, delay: 0.2, ease: [0.2, 0, 0, 1] }}
+                                animate={{
+                                    opacity: 1,
+                                    scale: 1,
+                                    x: 0,
+                                    transition: { duration: 1, delay: 0.2, ease: [0.2, 0, 0, 1] }
+                                }}
                                 className="relative hidden lg:block"
                             >
                                 <div className="absolute -inset-10 bg-indigo-500/5 rounded-full blur-[100px] pointer-events-none"></div>
