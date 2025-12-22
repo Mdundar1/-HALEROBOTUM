@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '../context/AuthContext';
 import { motion } from 'framer-motion';
+import Logo from './Logo';
 
 export default function Navigation() {
     const pathname = usePathname();
@@ -39,23 +40,7 @@ export default function Navigation() {
                 <div className="flex justify-between h-20 items-center">
                     <div className="flex items-center gap-12">
                         {/* Logo Area */}
-                        <Link href="/" className="flex items-center gap-4 group">
-                            <div className="relative">
-                                <div className="absolute -inset-2 bg-gradient-to-tr from-blue-600 to-indigo-600 rounded-2xl blur-lg opacity-0 group-hover:opacity-30 transition-opacity duration-500"></div>
-                                <div className="w-12 h-12 flex items-center justify-center rounded-xl bg-slate-950 border border-slate-800/50 group-hover:border-indigo-500/50 transition-all duration-500 relative overflow-hidden shadow-2xl">
-                                    <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 to-transparent"></div>
-                                    <svg className="w-7 h-7 text-indigo-400 relative z-10 group-hover:scale-110 transition-transform duration-500 animate-brand-glow" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                                        <path d="M3 3v18h18" />
-                                        <path d="M18 17l-5-5-3 3-5-5" />
-                                    </svg>
-                                </div>
-                            </div>
-                            <div className="flex flex-col">
-                                <span className="text-2xl font-black tracking-tight text-white">
-                                    Maliyet<span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400">724</span>
-                                </span>
-                            </div>
-                        </Link>
+                        <Logo light />
 
                         {/* Desktop Navigation */}
                         <div className="hidden lg:flex items-center space-x-4 ml-8">

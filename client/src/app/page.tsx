@@ -30,6 +30,7 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Navigation from '../components/Navigation';
+import Logo from '../components/Logo';
 import { useAuth } from '../context/AuthContext';
 
 function LandingContent() {
@@ -132,8 +133,11 @@ function LandingContent() {
     // Animation Variants
     const fadeInUp = {
         initial: { opacity: 0, y: 20 },
-        animate: { opacity: 1, y: 0 },
-        transition: { duration: 0.6, ease: [0.2, 0, 0, 1] }
+        animate: {
+            opacity: 1,
+            y: 0,
+            transition: { duration: 0.6, ease: [0.2, 0, 0, 1] }
+        }
     };
 
     const containerVariants = {
@@ -674,7 +678,7 @@ function LandingContent() {
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div className="grid md:grid-cols-4 gap-12 mb-16">
                             <div className="col-span-1 md:col-span-1">
-                                <span className="text-3xl font-black text-slate-900 tracking-tighter lowercase italic animate-brand-glow">maliyet<span className="text-indigo-600 text-brand-glow">724</span></span>
+                                <Logo />
                                 <p className="text-slate-400 text-sm font-bold mt-4 leading-relaxed">
                                     Türkiye'nin en gelişmiş yapay zeka destekli metaj ve maliyet analiz platformu.
                                 </p>
@@ -750,10 +754,7 @@ function LandingContent() {
 
                                     <div className="relative z-10">
                                         <div className="flex items-center gap-2 mb-12">
-                                            <div className="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center shadow-lg shadow-indigo-500/20">
-                                                <Zap className="w-6 h-6 text-white" />
-                                            </div>
-                                            <span className="text-xl font-black tracking-tighter italic lowercase animate-brand-glow">maliyet<span className="text-indigo-400">724</span></span>
+                                            <Logo light animated={false} />
                                         </div>
 
                                         <h2 className="text-4xl font-black tracking-tight leading-tight mb-6">

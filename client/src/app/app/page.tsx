@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import mammoth from 'mammoth';
 import Link from 'next/link';
 import Navigation from '../../components/Navigation';
+import Logo from '../../components/Logo';
 import { useAuth } from '../../context/AuthContext';
 import * as XLSX from 'xlsx';
 import {
@@ -910,12 +911,8 @@ export default function AnalysisPage() {
                                 className="bg-white p-8 md:p-12 rounded-[3rem] shadow-2xl shadow-cyan-900/10 flex flex-col items-center max-w-lg w-full text-center relative overflow-hidden border border-slate-100"
                             >
                                 <div className="absolute inset-0 bg-gradient-to-br from-cyan-50/30 to-white -z-10"></div>
-                                <div className="w-24 h-24 mb-8 relative">
-                                    <div className="absolute inset-0 border-4 border-slate-100 rounded-full"></div>
-                                    <div className="absolute inset-0 border-4 border-cyan-600 rounded-full border-t-transparent animate-spin"></div>
-                                    <div className="absolute inset-0 flex items-center justify-center">
-                                        <Calculator className="w-10 h-10 text-cyan-600 animate-pulse" />
-                                    </div>
+                                <div className="mb-8 flex flex-col items-center">
+                                    <Logo animated={true} />
                                 </div>
                                 <h2 className="text-3xl font-black text-slate-900 mb-2 tracking-tight">Analiz Hazırlanıyor</h2>
                                 <p className="text-slate-500 mb-8 font-medium">
