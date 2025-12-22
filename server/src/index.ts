@@ -1378,12 +1378,6 @@ const requireSubscription = async (req: any, res: any, next: any) => {
 
 app.get('/api/dataset', optionalAuthenticateToken, async (req: any, res) => {
     try {
-        let hasActiveSubscription = false;
-        if (req.user) {
-            const sub = await getSubscription(req.user.id);
-            hasActiveSubscription = !!sub;
-        }
-
         const { data: items, error } = await supabase
             .from('poz_items')
             .select('*')
@@ -1396,7 +1390,7 @@ app.get('/api/dataset', optionalAuthenticateToken, async (req: any, res) => {
             code: item.code,
             description: item.description,
             unit: item.unit,
-            unitPrice: hasActiveSubscription ? item.unit_price : 0
+            unitPrice: item.unit_price // Always public as per user request
         }));
 
         res.json({ items: formattedItems, count: formattedItems.length });

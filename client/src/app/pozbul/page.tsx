@@ -127,9 +127,12 @@ export default function PozBulPage() {
 
     useEffect(() => {
         const token = localStorage.getItem('token');
-        fetch('/api/dataset', {
-            headers: { 'Authorization': `Bearer ${token}` }
-        })
+        const headers: HeadersInit = {};
+        if (token) {
+            headers['Authorization'] = `Bearer ${token}`;
+        }
+
+        fetch('/api/dataset', { headers })
             .then(res => res.json())
             .then(data => setDataset(data.items || []))
             .catch(err => console.error('Dataset yüklenemedi:', err));
