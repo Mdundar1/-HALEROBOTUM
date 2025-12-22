@@ -97,10 +97,11 @@ let dataset: PozItem[] = [];
 // Load dataset from Supabase on startup
 async function loadDataset() {
     try {
-        const { data, error } = await supabase
+        const { data, error, count } = await supabase
             .from('poz_items')
-            .select('*')
-            .order('code');
+            .select('*', { count: 'exact' })
+            .order('code')
+            .limit(10000);
 
         if (error) throw error;
 
@@ -112,7 +113,7 @@ async function loadDataset() {
             unitPrice: item.unit_price
         }));
 
-        console.log(`✓ Loaded ${dataset.length} items from Supabase poz_items`);
+        console.log(`✓ Loaded ${dataset.length} items from Supabase poz_items (Total in DB: ${count})`);
     } catch (error) {
         console.error('Error loading dataset from Supabase:', error);
         console.log('⚠️ Attempting fallback to SQLite...');
@@ -1378,10 +1379,11 @@ const requireSubscription = async (req: any, res: any, next: any) => {
 
 app.get('/api/dataset', optionalAuthenticateToken, async (req: any, res) => {
     try {
-        const { data: items, error } = await supabase
+        const { data: items, error, count } = await supabase
             .from('poz_items')
-            .select('*')
-            .order('code');
+            .select('*', { count: 'exact' })
+            .order('code')
+            .limit(10000);
 
         if (error) throw error;
 
@@ -1393,7 +1395,11 @@ app.get('/api/dataset', optionalAuthenticateToken, async (req: any, res) => {
             unitPrice: item.unit_price // Always public as per user request
         }));
 
-        res.json({ items: formattedItems, count: formattedItems.length });
+        res.json({
+            items: formattedItems,
+            count: count || formattedItems.length,
+            limit: 10000
+        });
     } catch (error: any) {
         console.error('Dataset fetch error:', error.message);
         res.status(500).json({ error: error.message });
