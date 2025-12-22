@@ -518,25 +518,34 @@ function LandingContent() {
                 </section>
 
                 {/* PRICING */}
-                <section id="pricing" className="py-40 bg-[#020617] relative overflow-hidden">
-                    <div className="absolute inset-0 opacity-20 pointer-events-none" style={{ backgroundImage: 'radial-gradient(#1e293b 1px, transparent 1px)', backgroundSize: '40px 40px' }}></div>
-                    <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-indigo-500/20 to-transparent"></div>
+                <section id="pricing" className="py-32 bg-[#020617] relative overflow-hidden">
+                    {/* Ambient Background */}
+                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[500px] bg-indigo-500/10 blur-[120px] rounded-full pointer-events-none"></div>
+                    <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-blue-500/5 blur-[100px] rounded-full pointer-events-none"></div>
+                    <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-[0.02] pointer-events-none"></div>
 
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                        {/* Header */}
                         <div className="text-center max-w-3xl mx-auto mb-20 px-4">
                             <motion.div
-                                initial={{ opacity: 0, scale: 0.9 }}
-                                whileInView={{ opacity: 1, scale: 1 }}
-                                className="inline-block px-4 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-[10px] font-black uppercase tracking-[0.4em] mb-6 shadow-2xl shadow-indigo-950"
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900 border border-slate-800 text-indigo-400 text-[10px] font-bold uppercase tracking-[0.2em] mb-8 shadow-2xl"
                             >
+                                <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse"></span>
                                 Sizin İçin En Uygun Plan
                             </motion.div>
-                            <h2 className="text-4xl lg:text-6xl font-black text-white mb-6">Paket <span className="text-indigo-400 italic">Seçenekleri</span></h2>
-                            <p className="text-xl text-slate-400 font-medium italic mb-10">Ücretsiz deneme ile başlayın, istediğiniz zaman iptal edin.</p>
+
+                            <h2 className="text-4xl md:text-5xl lg:text-7xl font-bold text-white mb-6 tracking-tight">
+                                Paket <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-cyan-400">Seçenekleri</span>
+                            </h2>
+                            <p className="text-lg text-slate-400 font-medium leading-relaxed max-w-xl mx-auto">
+                                Ücretsiz deneme ile başlayın, istediğiniz zaman iptal edin.
+                            </p>
 
                             {/* TOGGLE VISUAL */}
-                            <div className="flex items-center justify-center gap-2 mb-10">
-                                <div className="bg-slate-800/50 p-1.5 rounded-2xl border border-slate-700/50 flex flex-wrap justify-center gap-1">
+                            <div className="mt-12 flex justify-center">
+                                <div className="bg-slate-900/80 backdrop-blur-md p-1.5 rounded-2xl border border-slate-800 inline-flex relative">
                                     {[
                                         { id: 'monthly', label: '1 AYLIK' },
                                         { id: 'quarterly', label: '3 AYLIK', promo: '%16 TASARRUF' },
@@ -545,16 +554,24 @@ function LandingContent() {
                                         <button
                                             key={cycle.id}
                                             onClick={() => setBillingCycle(cycle.id as any)}
-                                            className={`px-6 py-3 rounded-xl text-[10px] font-black transition-all flex items-center gap-2 uppercase tracking-widest ${billingCycle === cycle.id
-                                                ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-900/40'
-                                                : 'text-slate-500 hover:text-slate-300'
+                                            className={`relative px-6 py-2.5 rounded-xl text-[11px] font-bold transition-all duration-300 flex items-center gap-3 z-10 ${billingCycle === cycle.id ? 'text-white' : 'text-slate-500 hover:text-slate-300'
                                                 }`}
                                         >
-                                            {cycle.label}
+                                            <span className="tracking-wider">{cycle.label}</span>
                                             {cycle.promo && (
-                                                <span className={`px-2 py-0.5 rounded-md text-[7px] font-black whitespace-nowrap ${billingCycle === cycle.id ? 'bg-white/20 text-white' : 'bg-slate-700 text-slate-400'}`}>
+                                                <span className={`px-2 py-0.5 rounded-md text-[9px] font-bold tracking-wide ${billingCycle === cycle.id
+                                                        ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/20'
+                                                        : 'bg-slate-800 text-emerald-400 border border-slate-700'
+                                                    }`}>
                                                     {cycle.promo}
                                                 </span>
+                                            )}
+                                            {billingCycle === cycle.id && (
+                                                <motion.div
+                                                    layoutId="cycle-highlight"
+                                                    className="absolute inset-0 bg-slate-800 border border-slate-700 rounded-xl shadow-sm z-[-1]"
+                                                    transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                                                />
                                             )}
                                         </button>
                                     ))}
@@ -562,12 +579,13 @@ function LandingContent() {
                             </div>
                         </div>
 
+                        {/* CARDS */}
                         <motion.div
                             variants={containerVariants}
                             initial="initial"
                             whileInView="animate"
                             viewport={{ once: true }}
-                            className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto items-stretch"
+                            className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto items-start"
                         >
                             {[
                                 {
@@ -597,85 +615,96 @@ function LandingContent() {
                                 <motion.div
                                     key={idx}
                                     variants={fadeInUp}
-                                    className={`w-full rounded-[2.5rem] transition-all duration-500 flex group/card ${plan.special
-                                        ? 'bg-gradient-to-b from-indigo-500/20 to-blue-600/20 shadow-2xl shadow-indigo-500/10 scale-105 z-10'
-                                        : 'bg-slate-800/40 border border-slate-700/50 hover:bg-slate-800/60'}`}
+                                    className={`relative group h-full`}
                                 >
-                                    <div className={`w-full rounded-[2.4rem] p-8 flex flex-col ${plan.special ? 'bg-slate-950/40 backdrop-blur-sm' : 'bg-transparent'}`}>
-                                        <div className="mb-6 text-center">
+                                    <div className={`h-full rounded-[2rem] p-1 transition-all duration-500 ${plan.special
+                                            ? 'bg-gradient-to-b from-indigo-500 to-blue-600 shadow-2xl shadow-indigo-500/20 scale-[1.02]'
+                                            : 'bg-slate-800 hover:bg-slate-700'
+                                        }`}>
+                                        <div className={`h-full rounded-[1.9rem] p-8 flex flex-col relative overflow-hidden ${plan.special ? 'bg-slate-900' : 'bg-slate-950'
+                                            }`}>
+                                            {/* Glow Effect */}
                                             {plan.special && (
-                                                <div className="inline-block px-4 py-1.5 rounded-full bg-gradient-to-r from-indigo-600 to-blue-600 text-white text-[9px] font-black uppercase tracking-[0.2em] mb-6 shadow-xl shadow-indigo-900/40 animate-pulse">
-                                                    ★ EN POPÜLER
-                                                </div>
+                                                <div className="absolute top-0 inset-x-0 h-40 bg-indigo-500/10 blur-3xl pointer-events-none"></div>
                                             )}
-                                            <h3 className={`text-lg font-black mb-1 ${plan.special ? 'text-white' : 'text-slate-300'}`}>{plan.name}</h3>
 
-                                            <div className="mt-8 flex flex-col items-center justify-center min-h-[90px]">
+                                            {/* Header */}
+                                            <div className="mb-8 relative">
+                                                <div className="flex justify-between items-start mb-4">
+                                                    <h3 className={`text-xl font-bold ${plan.special ? 'text-white' : 'text-slate-200'}`}>
+                                                        {plan.name}
+                                                    </h3>
+                                                    {plan.special && (
+                                                        <span className="px-3 py-1 rounded-full bg-indigo-500 text-white text-[10px] font-bold uppercase tracking-wider shadow-lg shadow-indigo-500/40">
+                                                            Popüler
+                                                        </span>
+                                                    )}
+                                                </div>
+                                                <p className="text-slate-500 text-xs font-medium">{plan.desc}</p>
+                                            </div>
+
+                                            {/* Price */}
+                                            <div className="mb-8 min-h-[80px]">
                                                 {plan.name === 'Kurumsal' ? (
-                                                    <span className="text-2xl font-black text-white tracking-tight">Bize Ulaşın</span>
+                                                    <span className="text-3xl font-bold text-white tracking-tight">Bize Ulaşın</span>
                                                 ) : (
-                                                    <div className="text-center group-hover:transform group-hover:scale-110 transition-transform duration-500">
-                                                        <div className="flex items-center justify-center gap-2 mb-1">
-                                                            {(billingCycle === 'quarterly' || billingCycle === 'annual') && plan.originalPrices && (
-                                                                <span className="text-slate-500 text-lg line-through font-bold opacity-40">
-                                                                    {plan.originalPrices[billingCycle as keyof typeof plan.originalPrices]}
-                                                                </span>
-                                                            )}
-                                                            <div className="flex items-baseline gap-1">
-                                                                <span className="text-5xl font-black text-white tracking-tight drop-shadow-2xl">
-                                                                    {plan.prices[billingCycle as keyof typeof plan.prices] || plan.prices['monthly']}
-                                                                </span>
-                                                                <span className="text-slate-400 text-xs font-black uppercase tracking-widest">/ay</span>
-                                                            </div>
+                                                    <div>
+                                                        <div className="flex items-baseline gap-1">
+                                                            <span className="text-4xl lg:text-5xl font-bold text-white tracking-tight">
+                                                                {plan.prices[billingCycle as keyof typeof plan.prices] || plan.prices['monthly']}
+                                                            </span>
+                                                            <span className="text-slate-500 text-sm font-medium">/ay</span>
                                                         </div>
-
-                                                        {(billingCycle === 'quarterly' || billingCycle === 'annual') && plan.totals && (
-                                                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 mt-2">
-                                                                <span className="text-emerald-400 text-[9px] font-black uppercase tracking-widest">
-                                                                    Ödenecek Toplam: {plan.totals[billingCycle as keyof typeof plan.totals]}
-                                                                </span>
+                                                        {(billingCycle === 'quarterly' || billingCycle === 'annual') && plan.originalPrices && (
+                                                            <div className="mt-2 text-rose-400 text-xs font-bold line-through opacity-80">
+                                                                {plan.originalPrices[billingCycle as keyof typeof plan.originalPrices]}
                                                             </div>
                                                         )}
-
-                                                        {billingCycle === 'monthly' && (
-                                                            <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mt-1 opacity-60">
-                                                                Aylık Ödeme
-                                                            </p>
+                                                        {(billingCycle === 'quarterly' || billingCycle === 'annual') && plan.totals && (
+                                                            <div className="mt-2 text-emerald-400 text-[10px] font-bold uppercase tracking-wider">
+                                                                Toplam: {plan.totals[billingCycle as keyof typeof plan.totals]}
+                                                            </div>
                                                         )}
                                                     </div>
                                                 )}
                                             </div>
+
+                                            {/* Divider */}
+                                            <div className="w-full h-px bg-slate-800 mb-8"></div>
+
+                                            {/* Features */}
+                                            <ul className="space-y-4 mb-8 flex-1">
+                                                {plan.features.map((f, i) => (
+                                                    <li key={i} className="flex items-start gap-3">
+                                                        <div className={`mt-0.5 w-5 h-5 rounded-full flex items-center justify-center shrink-0 ${plan.special ? 'bg-indigo-500/20 text-indigo-400' : 'bg-slate-800 text-slate-400'
+                                                            }`}>
+                                                            <Check className="w-3 h-3" strokeWidth={3} />
+                                                        </div>
+                                                        <span className="text-[13px] text-slate-300 font-medium leading-tight">
+                                                            {f}
+                                                        </span>
+                                                    </li>
+                                                ))}
+                                            </ul>
+
+                                            {/* Action Button */}
+                                            <button
+                                                onClick={() => {
+                                                    if (plan.name === 'Kurumsal') {
+                                                        window.open('https://wa.me/905453915840?text=Kurumsal%20hizmetler%20hakkında%20bilgi%20almak%20istiyorum.', '_blank');
+                                                    } else {
+                                                        setAuthMode('register');
+                                                        setShowAuthModal(true);
+                                                    }
+                                                }}
+                                                className={`w-full py-4 rounded-xl font-bold text-[13px] uppercase tracking-widest transition-all duration-300 transform active:scale-95 ${plan.special
+                                                        ? 'bg-gradient-to-r from-indigo-600 to-blue-600 text-white hover:shadow-lg hover:shadow-indigo-500/25'
+                                                        : 'bg-slate-800 text-white hover:bg-slate-700 border border-slate-700'
+                                                    }`}
+                                            >
+                                                {plan.name === 'Kurumsal' ? 'BİZE ULAŞIN' : 'HEMEN BAŞLA'}
+                                            </button>
                                         </div>
-
-                                        <div className="h-px bg-slate-800/50 w-full mb-6"></div>
-
-                                        <ul className="space-y-4 mb-8 flex-1">
-                                            {plan.features.map((f, i) => (
-                                                <li key={i} className="flex items-center gap-3 text-[11px] font-bold text-slate-400">
-                                                    <div className={`w-4 h-4 rounded-full flex items-center justify-center shrink-0 border ${plan.special ? 'bg-indigo-500/10 border-indigo-500/20 text-indigo-400' : 'bg-slate-800/50 border-slate-700 text-slate-500'}`}>
-                                                        <Check className="w-2.5 h-2.5" />
-                                                    </div>
-                                                    <span className="tracking-tight">{f}</span>
-                                                </li>
-                                            ))}
-                                        </ul>
-
-                                        <button
-                                            onClick={() => {
-                                                if (plan.name === 'Kurumsal') {
-                                                    window.open('https://wa.me/905453915840?text=Kurumsal%20hizmetler%20hakkında%20bilgi%20almak%20istiyorum.', '_blank');
-                                                } else {
-                                                    setAuthMode('register');
-                                                    setShowAuthModal(true);
-                                                }
-                                            }}
-                                            className={`w-full py-4 rounded-2xl font-black text-[11px] uppercase tracking-widest transition-all ${plan.special
-                                                ? 'bg-indigo-600 text-white hover:bg-indigo-500 shadow-xl shadow-indigo-900/20'
-                                                : 'bg-slate-800 text-white hover:bg-slate-700 border border-slate-700'
-                                                }`}
-                                        >
-                                            {plan.name === 'Kurumsal' ? 'BİZE ULAŞIN' : 'HEMEN BAŞLA'}
-                                        </button>
                                     </div>
                                 </motion.div>
                             ))}
