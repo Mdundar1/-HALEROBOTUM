@@ -10,77 +10,77 @@ interface LogoProps {
 }
 
 export default function Logo({ className = "", light = false, animated = true }: LogoProps) {
-    const textColors = light ? "text-white" : "text-slate-900";
+    const textColor = light ? "text-white" : "text-slate-900";
 
     const container = {
-        hidden: { opacity: 0 },
+        hidden: { opacity: 0, x: -10 },
         visible: {
             opacity: 1,
+            x: 0,
             transition: {
-                staggerChildren: 0.08,
-                delayChildren: 0.3,
+                duration: 0.5,
+                ease: "easeOut",
+                staggerChildren: 0.1
             }
         }
     };
 
     const item = {
-        hidden: { y: 20, opacity: 0 },
+        hidden: { opacity: 0, y: 5 },
         visible: {
-            y: 0,
             opacity: 1,
-            transition: {
-                type: "spring",
-                damping: 12,
-                stiffness: 200
-            }
-        }
-    };
-
-    const bounce = {
-        hidden: { y: -20, opacity: 0 },
-        visible: {
             y: 0,
-            opacity: 1,
-            transition: {
-                type: "spring",
-                damping: 8,
-                stiffness: 300
-            }
+            transition: { duration: 0.4, ease: "easeOut" }
         }
     };
 
     return (
-        <Link href="/" className={`flex items-center group ${className}`}>
+        <Link href="/" className={`flex items-center gap-2 group ${className}`}>
+            {/* Logo Icon */}
             <motion.div
-                className={`flex items-baseline tracking-tighter ${textColors}`}
+                className="relative flex items-center justify-center"
+                initial={animated ? "hidden" : "visible"}
+                animate="visible"
+                variants={container}
+            >
+                <div className={`w-8 h-8 lg:w-10 lg:h-10 rounded-xl bg-gradient-to-br from-indigo-600 to-blue-500 shadow-lg flex items-center justify-center text-white transform transition-transform duration-300 group-hover:scale-105 group-hover:rotate-3`}>
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        className="w-5 h-5 lg:w-6 lg:h-6"
+                        strokeWidth={2.5}
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                    >
+                        {/* Abstract 'M' / Graph */}
+                        <path d="M12 20V10" />
+                        <path d="M18 20V4" />
+                        <path d="M6 20v-4" />
+                    </svg>
+                </div>
+            </motion.div>
+
+            {/* Text */}
+            <motion.div
+                className={`flex flex-col justify-center ${textColor}`}
                 variants={animated ? container : {}}
-                initial="hidden"
+                initial={animated ? "hidden" : "visible"}
                 animate="visible"
             >
-                {/* maliyet */}
-                <div className="flex">
-                    {"maliyet".split("").map((char, i) => (
-                        <motion.span
-                            key={i}
-                            variants={animated ? item : {}}
-                            className="font-black italic lg:text-3xl text-2xl"
-                        >
-                            {char}
-                        </motion.span>
-                    ))}
-                </div>
-
-                {/* 724 */}
-                <div className="flex ml-0.5">
-                    {["7", "2", "4"].map((char, i) => (
-                        <motion.span
-                            key={i}
-                            variants={animated ? bounce : {}}
-                            className="font-black lg:text-3xl text-2xl bg-gradient-to-br from-indigo-500 to-blue-600 bg-clip-text text-transparent drop-shadow-sm transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-3"
-                        >
-                            {char}
-                        </motion.span>
-                    ))}
+                <div className="flex items-baseline leading-none">
+                    <motion.span
+                        variants={item}
+                        className="font-bold text-xl lg:text-2xl tracking-tight"
+                    >
+                        Maliyet
+                    </motion.span>
+                    <motion.span
+                        variants={item}
+                        className={`font-extrabold text-xl lg:text-2xl ml-0.5 bg-gradient-to-r from-indigo-500 to-blue-600 bg-clip-text text-transparent`}
+                    >
+                        724
+                    </motion.span>
                 </div>
             </motion.div>
         </Link>

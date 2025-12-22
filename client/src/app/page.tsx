@@ -184,7 +184,7 @@ function LandingContent() {
                                     className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-900/5 border border-slate-200 text-[11px] font-black text-slate-500 uppercase tracking-[0.3em] mb-10 shadow-sm"
                                 >
                                     <span className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse"></span>
-                                    <Logo className="scale-[0.4] -mx-8 -my-2" animated={false} />
+                                    <Logo className="scale-[0.5] origin-left -ml-2" animated={false} />
                                     AI Destekli Metraj Çözümleri
                                 </motion.div>
                                 <motion.h1

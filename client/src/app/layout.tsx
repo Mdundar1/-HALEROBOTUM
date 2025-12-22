@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Poppins } from 'next/font/google'
+import { Poppins, Space_Grotesk } from 'next/font/google'
 import './globals.css'
 import { AuthProvider } from '../context/AuthContext'
 import Navigation from '../components/Navigation'
@@ -8,6 +8,12 @@ const poppins = Poppins({
     subsets: ['latin'],
     weight: ['300', '400', '500', '600', '700', '800'],
     variable: '--font-poppins'
+})
+
+const spaceGrotesk = Space_Grotesk({
+    subsets: ['latin'],
+    weight: ['300', '400', '500', '600', '700'],
+    variable: '--font-space-grotesk'
 })
 
 export const metadata: Metadata = {
@@ -22,7 +28,7 @@ export default function RootLayout({
 }) {
     return (
         <html lang="tr">
-            <body className={poppins.className}>
+            <body className={`${poppins.className} ${spaceGrotesk.variable}`}>
                 <AuthProvider>
                     <Navigation />
                     {children}
