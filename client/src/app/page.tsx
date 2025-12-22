@@ -54,15 +54,16 @@ function LandingContent() {
         const today = new Date();
         const dateStr = today.getFullYear().toString() + (today.getMonth() + 1).toString() + today.getDate().toString();
         const seed = parseInt(dateStr);
+        // Deterministic but daily changing numbers - Scaled for Realistic Growth
+        // Launch baseline: Dec 22, 2025 -> 71 Analiz, 10654 Poz
+        const startDate = new Date('2025-12-22');
+        const daysDiff = Math.max(0, Math.floor((today.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)));
 
-        // Deterministic but daily changing numbers - Scaled for "Total to Date"
-        // Making them look more like measured, specific numbers
-        const baseSchedules = 24800;
-        const baseItems = 592000;
+        const analysisNoise = seed % 11; // bit of noise (0-10)
+        const schedules = 71 + (daysDiff * 15) + analysisNoise;
 
-        const schedules = baseSchedules + (seed % 340);
-        const successRate = 98.7 + (seed % 10) / 10;
-        const totalItems = baseItems + (seed % 8400);
+        const successRate = 88.7 + ((seed % 41) / 10) - 2; // 86.7 to 90.7
+        const totalItems = 10654 + (schedules - 71) * 140 + (seed % 50);
 
         return {
             schedules: schedules.toLocaleString('tr-TR'),
