@@ -82,8 +82,17 @@ function LandingContent() {
     const [acceptTerms, setAcceptTerms] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const [rememberMe, setRememberMe] = useState(false);
 
     useEffect(() => {
+        const savedEmail = localStorage.getItem('remembered_email');
+        const savedPassword = localStorage.getItem('remembered_password');
+        if (savedEmail && savedPassword) {
+            setEmail(savedEmail);
+            setPassword(savedPassword);
+            setRememberMe(true);
+        }
+
         const handleScroll = () => setScrolled(window.scrollY > 50);
         window.addEventListener('scroll', handleScroll);
 
@@ -104,6 +113,13 @@ function LandingContent() {
         try {
             if (authMode === 'login') {
                 await login(email, password);
+                if (rememberMe) {
+                    localStorage.setItem('remembered_email', email);
+                    localStorage.setItem('remembered_password', password);
+                } else {
+                    localStorage.removeItem('remembered_email');
+                    localStorage.removeItem('remembered_password');
+                }
                 setShowAuthModal(false);
                 router.push('/app');
             } else {
@@ -560,8 +576,8 @@ function LandingContent() {
                                             <span className="tracking-wider">{cycle.label}</span>
                                             {cycle.promo && (
                                                 <span className={`px-2 py-0.5 rounded-md text-[9px] font-bold tracking-wide ${billingCycle === cycle.id
-                                                        ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/20'
-                                                        : 'bg-slate-800 text-emerald-400 border border-slate-700'
+                                                    ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/20'
+                                                    : 'bg-slate-800 text-emerald-400 border border-slate-700'
                                                     }`}>
                                                     {cycle.promo}
                                                 </span>
@@ -618,8 +634,8 @@ function LandingContent() {
                                     className={`relative group h-full`}
                                 >
                                     <div className={`h-full rounded-[2rem] p-1 transition-all duration-500 ${plan.special
-                                            ? 'bg-gradient-to-b from-indigo-500 to-blue-600 shadow-2xl shadow-indigo-500/20 scale-[1.02]'
-                                            : 'bg-slate-800 hover:bg-slate-700'
+                                        ? 'bg-gradient-to-b from-indigo-500 to-blue-600 shadow-2xl shadow-indigo-500/20 scale-[1.02]'
+                                        : 'bg-slate-800 hover:bg-slate-700'
                                         }`}>
                                         <div className={`h-full rounded-[1.9rem] p-8 flex flex-col relative overflow-hidden ${plan.special ? 'bg-slate-900' : 'bg-slate-950'
                                             }`}>
@@ -698,8 +714,8 @@ function LandingContent() {
                                                     }
                                                 }}
                                                 className={`w-full py-4 rounded-xl font-bold text-[13px] uppercase tracking-widest transition-all duration-300 transform active:scale-95 ${plan.special
-                                                        ? 'bg-gradient-to-r from-indigo-600 to-blue-600 text-white hover:shadow-lg hover:shadow-indigo-500/25'
-                                                        : 'bg-slate-800 text-white hover:bg-slate-700 border border-slate-700'
+                                                    ? 'bg-gradient-to-r from-indigo-600 to-blue-600 text-white hover:shadow-lg hover:shadow-indigo-500/25'
+                                                    : 'bg-slate-800 text-white hover:bg-slate-700 border border-slate-700'
                                                     }`}
                                             >
                                                 {plan.name === 'Kurumsal' ? 'BİZE ULAŞIN' : 'HEMEN BAŞLA'}
@@ -930,6 +946,21 @@ function LandingContent() {
                                                 value={password} onChange={e => setPassword(e.target.value)} required
                                             />
                                         </div>
+
+                                        {authMode === 'login' && (
+                                            <div className="flex items-center gap-2 px-2 pb-2">
+                                                <input
+                                                    type="checkbox"
+                                                    id="rememberMe"
+                                                    className="w-4 h-4 rounded border-slate-200 text-transparent bg-indigo-50 border-2 checked:bg-indigo-600 checked:border-indigo-600 focus:ring-indigo-500 transition-all cursor-pointer accent-indigo-600"
+                                                    checked={rememberMe}
+                                                    onChange={(e) => setRememberMe(e.target.checked)}
+                                                />
+                                                <label htmlFor="rememberMe" className="text-[11px] text-slate-500 font-bold cursor-pointer uppercase tracking-tight select-none">
+                                                    Beni Hatırla
+                                                </label>
+                                            </div>
+                                        )}
 
                                         {authMode === 'register' && (
                                             <>
