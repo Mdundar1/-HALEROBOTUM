@@ -141,15 +141,31 @@ const fuzzyMatch = (str1: string, str2: string): number => {
     // 1. Clean and Normalize
     const cleanStr1 = removeParentheses(str1).toLowerCase();
     const cleanStr2 = removeParentheses(str2).toLowerCase();
+    
+    // 2. TOKEN-BASED NUMERIC CHECK (STRICT)
+    // Extract numbers before normalization to preserve decimal separators
+    const numClean1 = cleanStr1.replace(/,/g, '.');
+    const numClean2 = cleanStr2.replace(/,/g, '.');
+    const nums1 = extractNumbers(numClean1);
+    const nums2 = extractNumbers(numClean2);
+
+    if (nums2.length > 0) {
+        // If the TARGET (POZ) has numbers, they MUST all be present in the input line
+        const missingNums = nums2.filter(n2 => !nums1.includes(n2));
+        if (missingNums.length > 0) {
+            return 0; // Immediate disqualification for dimension mismatch
+        }
+    }
+
     const s1 = normalizeText(cleanStr1);
     const s2 = normalizeText(cleanStr2);
 
     if (s1 === s2) return 100;
-
+    
     // Prefix Match Bonus: If target is at the very beginning of search desc
     if (s1.startsWith(s2)) return 95;
 
-    // 2. Tokenize
+    // 3. Tokenize
     const tokens1 = s1.split(/\s+/).filter(w => w.length > 1);
     const tokens2 = s2.split(/\s+/).filter(w => w.length > 1);
 
@@ -165,7 +181,7 @@ const fuzzyMatch = (str1: string, str2: string): number => {
         }
     });
 
-    // 3. Keyword Matching
+    // 4. Keyword Matching
     let matches = 0;
     let totalWeight = 0;
 
@@ -200,7 +216,7 @@ const fuzzyMatch = (str1: string, str2: string): number => {
     // Normalized Score (0-100)
     let score = totalWeight > 0 ? (matches / totalWeight) * 100 : 0;
 
-    // 4. Dimension/Unit Mismatch Penalty (Strict)
+    // 5. Dimension/Unit Mismatch Penalty (Strict)
     const dims1 = extractDimensions(cleanStr1);
     const dims2 = extractDimensions(cleanStr2);
 
@@ -220,7 +236,7 @@ const fuzzyMatch = (str1: string, str2: string): number => {
         }
     }
 
-    // 5. Containment Bonus: If every word of the POZ is in the line
+    // 6. Containment Bonus: If every word of the POZ is in the line
     const allTokensMatch = tokens2.every(t2 =>
         STOP_WORDS.has(t2) || tokens1.some(t1 => t1 === t2 || t1.includes(t2))
     );
