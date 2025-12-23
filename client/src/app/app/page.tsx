@@ -129,10 +129,10 @@ const wordSimilarity = (w1: string, w2: string): number => {
 const STOP_WORDS = new Set(['ve', 'ile', 'veya', 'için', 'bir', 'türlü', 'her', 'kadar', 'hariç', 'dahil']);
 const ACTION_VERBS = ['yapılması', 'edilmesi', 'temini', 'yerine', 'montajı', 'sökülmesi', 'atılması', 'taşınması', 'konulması', 'döşenmesi'];
 
-// Extract dimensions with units (e.g., "8 cm", "14-28 mm")
+// Extract dimensions with units (e.g., "8 cm", "14-28 mm", "300 m3/h")
 const extractDimensions = (s: string): string[] => {
-    // Matches: "8 cm", "8cm", "1.5 m", "14-28 mm"
-    const regex = /\b(\d+(?:[.,]\d+)?(?:-\d+(?:[.,]\d+)?)?)\s*(mm|cm|m|mt|m2|m3|kg|gr|ton|lt|adet|ad|kva|kw|a)\b/g;
+    // Matches: "8 cm", "8cm", "1.5 m", "14-28 mm", "300 m3/h", "10 lt/sn"
+    const regex = /\b(\d+(?:[.,]\d+)?(?:-\d+(?:[.,]\d+)?)?)\s*(mm|cm|m|mt|m2|m3|m3\/h|kg|gr|ton|lt|lt\/sn|adet|ad|kva|kw|a)\b/g;
     const matches = s.toLowerCase().match(regex) || [];
     return matches.map(m => m.replace(/\s+/g, '')); // Normalize to "8cm"
 };
@@ -145,6 +145,9 @@ const fuzzyMatch = (str1: string, str2: string): number => {
     const s2 = normalizeText(cleanStr2);
 
     if (s1 === s2) return 100;
+
+    // Prefix Match Bonus: If target is at the very beginning of search desc
+    if (s1.startsWith(s2)) return 95;
 
     // 2. Tokenize
     const tokens1 = s1.split(/\s+/).filter(w => w.length > 1);
@@ -166,27 +169,17 @@ const fuzzyMatch = (str1: string, str2: string): number => {
     let matches = 0;
     let totalWeight = 0;
 
-    for (let i = 0; i < tokens1.length; i++) {
-        const t1 = tokens1[i];
-        if (STOP_WORDS.has(t1)) continue;
+    // We prioritize tokens in tokens2 (the candidate POZ) 
+    // because we want to see if the POZ description is FULLY satisfied by the search line.
+    for (let i = 0; i < tokens2.length; i++) {
+        const t2 = tokens2[i];
+        if (STOP_WORDS.has(t2)) continue;
 
         let bestTokenScore = 0;
+        let weight = t2.length >= 5 ? 2 : 1;
 
-        // Base Weight
-        let weight = t1.length >= 5 ? 2 : 1;
-
-        // Context Bonus: Words before action verbs get extra weight
-        if (importantIndices.has(i)) {
-            weight += 3; // Significant boost
-        }
-
-        // Specificity Bonus: "begonit", "bazalt", "granit" etc. (Rare words)
-        // Simple heuristic: Capitalized in original string? (We lost case info)
-        // Or just length > 7?
-        if (t1.length > 7) weight += 1;
-
-        for (const t2 of tokens2) {
-            if (STOP_WORDS.has(t2)) continue;
+        for (const t1 of tokens1) {
+            if (STOP_WORDS.has(t1)) continue;
 
             let score = 0;
             if (t1 === t2) {
@@ -211,31 +204,27 @@ const fuzzyMatch = (str1: string, str2: string): number => {
     const dims1 = extractDimensions(cleanStr1);
     const dims2 = extractDimensions(cleanStr2);
 
-    if (dims1.length > 0) {
-        // If input has dimensions, the candidate MUST have them too
-        const matchingDims = dims1.filter(d1 => dims2.some(d2 => d1 === d2));
+    if (dims2.length > 0) {
+        // If candidate has dimensions, they SHOULD be present in input
+        const matchingDims = dims2.filter(d2 => dims1.some(d1 => d1 === d2));
 
-        if (matchingDims.length === 0 && dims2.length > 0) {
-            // Dimensions exist in both but NO match (e.g. "8cm" vs "10cm")
-            score -= 30;
-        } else if (matchingDims.length < dims1.length) {
-            // Some dimensions matched, some didn't
-            score -= 10 * (dims1.length - matchingDims.length);
-        } else if (matchingDims.length === dims1.length) {
-            // All dimensions matched
-            score += 15;
+        if (matchingDims.length === 0 && dims1.length > 0) {
+            // Dimensions exist in both but NO match
+            score -= 40;
+        } else if (matchingDims.length < dims2.length) {
+            // Some dimensions in POZ not found in line
+            score -= 15 * (dims2.length - matchingDims.length);
+        } else if (matchingDims.length === dims2.length) {
+            // All POZ dimensions found in line! Great match.
+            score += 20;
         }
     }
 
-    // 5. Critical Keyword Penalty (for significant words)
-    for (const t1 of tokens1) {
-        if (t1.length >= 5 && !STOP_WORDS.has(t1) && !ACTION_VERBS.some(v => t1.includes(v))) {
-            const hasMatch = tokens2.some(t2 => t1 === t2 || wordSimilarity(t1, t2) > 0.75);
-            if (!hasMatch) {
-                score -= 10;
-            }
-        }
-    }
+    // 5. Containment Bonus: If every word of the POZ is in the line
+    const allTokensMatch = tokens2.every(t2 =>
+        STOP_WORDS.has(t2) || tokens1.some(t1 => t1 === t2 || t1.includes(t2))
+    );
+    if (allTokensMatch && tokens2.length >= 2) score += 10;
 
     return Math.max(0, Math.min(100, score));
 };
