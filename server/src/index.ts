@@ -97,6 +97,8 @@ let dataset: PozItem[] = [];
 // Load dataset from Supabase on startup
 async function loadDataset() {
     try {
+        const { data, error, count } = await supabase
+            .from('poz_items')
             .select('*', { count: 'exact' })
             .order('code')
             .limit(100000);
@@ -1377,6 +1379,8 @@ const requireSubscription = async (req: any, res: any, next: any) => {
 
 app.get('/api/dataset', optionalAuthenticateToken, async (req: any, res) => {
     try {
+        const { data: items, error, count } = await supabase
+            .from('poz_items')
             .select('*', { count: 'exact' })
             .order('code')
             .limit(100000);
