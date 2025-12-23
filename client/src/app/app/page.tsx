@@ -141,20 +141,20 @@ const fuzzyMatch = (str1: string, str2: string): number => {
     // 1. Clean and Normalize
     const cleanStr1 = removeParentheses(str1).toLowerCase();
     const cleanStr2 = removeParentheses(str2).toLowerCase();
-    
+
     // 2. TOKEN-BASED NUMERIC CHECK (STRICT)
     // Extract numbers before normalization to preserve decimal separators
     const numClean1 = cleanStr1.replace(/,/g, '.');
     const numClean2 = cleanStr2.replace(/,/g, '.');
     // Regex for numbers like 21.3 or 300
-    const extractNum = (s) => (s.match(/\d+(?:\.\d+)?/g) || []);
-    
-    const nums1 = extractNum(numClean1);
-    const nums2 = extractNum(numClean2);
+    const extractNum = (s: string): string[] => (s.match(/\d+(?:\.\d+)?/g) || []) as string[];
+
+    const nums1: string[] = extractNum(numClean1);
+    const nums2: string[] = extractNum(numClean2);
 
     if (nums2.length > 0) {
         // If the TARGET (POZ) has numbers, they MUST all be present in the input line
-        const missingNums = nums2.filter(n2 => !nums1.includes(n2));
+        const missingNums = nums2.filter((n2: string) => !nums1.includes(n2));
         if (missingNums.length > 0) {
             return 0; // Immediate disqualification for dimension mismatch
         }
@@ -164,7 +164,7 @@ const fuzzyMatch = (str1: string, str2: string): number => {
     const s2 = normalizeText(cleanStr2);
 
     if (s1 === s2) return 100;
-    
+
     // Prefix Match Bonus: If target is at the very beginning of search desc
     if (s1.startsWith(s2)) return 95;
 
@@ -176,8 +176,8 @@ const fuzzyMatch = (str1: string, str2: string): number => {
 
     // Identify important words (preceding action verbs) in Input (str1)
     const importantIndices = new Set<number>();
-    tokens1.forEach((t, i) => {
-        if (ACTION_VERBS.some(v => t.includes(v))) {
+    tokens1.forEach((t: string, i: number) => {
+        if (ACTION_VERBS.some((v: string) => t.includes(v))) {
             // Mark previous 2 words as important
             if (i > 0) importantIndices.add(i - 1);
             if (i > 1) importantIndices.add(i - 2);
@@ -225,7 +225,7 @@ const fuzzyMatch = (str1: string, str2: string): number => {
 
     if (dims2.length > 0) {
         // If candidate has dimensions, they SHOULD be present in input
-        const matchingDims = dims2.filter(d2 => dims1.some(d1 => d1 === d2));
+        const matchingDims = dims2.filter((d2: string) => dims1.some((d1: string) => d1 === d2));
 
         if (matchingDims.length === 0 && dims1.length > 0) {
             // Dimensions exist in both but NO match
@@ -240,8 +240,8 @@ const fuzzyMatch = (str1: string, str2: string): number => {
     }
 
     // 6. Containment Bonus: If every word of the POZ is in the line
-    const allTokensMatch = tokens2.every(t2 =>
-        STOP_WORDS.has(t2) || tokens1.some(t1 => t1 === t2 || t1.includes(t2))
+    const allTokensMatch = tokens2.every((t2: string) =>
+        STOP_WORDS.has(t2) || tokens1.some((t1: string) => t1 === t2 || t1.includes(t2))
     );
     if (allTokensMatch && tokens2.length >= 2) score += 10;
 
@@ -646,14 +646,14 @@ export default function AnalysisPage() {
                 // 1. Code
                 if (nCode.length > 2) {
                     const exact = normalizedDataset.find(d => d.normCode === nCode);
-                    if (exact) { 
+                    if (exact) {
                         // VERIFY code match: If description numbers don't match, reject it
                         const nDesc = normalizeText(removeParentheses(line.isKalemi));
                         const vScore = fuzzyMatch(nDesc, exact.normDesc);
-                        
+
                         if (vScore > 20) {
-                            best = exact.original; 
-                            score = 100; 
+                            best = exact.original;
+                            score = 100;
                         } else {
                             console.log('Rejecting code match due to low description score:', nCode, nDesc, exact.normDesc);
                         }
