@@ -100,8 +100,7 @@ async function loadDataset() {
         const { data, error, count } = await supabase
             .from('poz_items')
             .select('*', { count: 'exact' })
-            .order('code')
-            .limit(10000);
+            .order('code');
 
         if (error) throw error;
 
@@ -1382,8 +1381,7 @@ app.get('/api/dataset', optionalAuthenticateToken, async (req: any, res) => {
         const { data: items, error, count } = await supabase
             .from('poz_items')
             .select('*', { count: 'exact' })
-            .order('code')
-            .limit(10000);
+            .order('code');
 
         if (error) throw error;
 
@@ -1397,8 +1395,7 @@ app.get('/api/dataset', optionalAuthenticateToken, async (req: any, res) => {
 
         res.json({
             items: formattedItems,
-            count: count || formattedItems.length,
-            limit: 10000
+            count: count || formattedItems.length
         });
     } catch (error: any) {
         console.error('Dataset fetch error:', error.message);

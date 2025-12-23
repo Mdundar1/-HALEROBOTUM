@@ -202,7 +202,7 @@ export default function PozBulPage() {
             return true;
         });
 
-        return uniqueResults.slice(0, 100).map(r => r.item);
+        return uniqueResults.slice(0, 500).map(r => r.item);
     }, [dataset, searchQuery]);
 
 
