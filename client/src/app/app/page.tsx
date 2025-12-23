@@ -146,8 +146,11 @@ const fuzzyMatch = (str1: string, str2: string): number => {
     // Extract numbers before normalization to preserve decimal separators
     const numClean1 = cleanStr1.replace(/,/g, '.');
     const numClean2 = cleanStr2.replace(/,/g, '.');
-    const nums1 = extractNumbers(numClean1);
-    const nums2 = extractNumbers(numClean2);
+    // Regex for numbers like 21.3 or 300
+    const extractNum = (s) => (s.match(/\d+(?:\.\d+)?/g) || []);
+    
+    const nums1 = extractNum(numClean1);
+    const nums2 = extractNum(numClean2);
 
     if (nums2.length > 0) {
         // If the TARGET (POZ) has numbers, they MUST all be present in the input line
@@ -643,7 +646,18 @@ export default function AnalysisPage() {
                 // 1. Code
                 if (nCode.length > 2) {
                     const exact = normalizedDataset.find(d => d.normCode === nCode);
-                    if (exact) { best = exact.original; score = 100; }
+                    if (exact) { 
+                        // VERIFY code match: If description numbers don't match, reject it
+                        const nDesc = normalizeText(removeParentheses(line.isKalemi));
+                        const vScore = fuzzyMatch(nDesc, exact.normDesc);
+                        
+                        if (vScore > 20) {
+                            best = exact.original; 
+                            score = 100; 
+                        } else {
+                            console.log('Rejecting code match due to low description score:', nCode, nDesc, exact.normDesc);
+                        }
+                    }
                 }
 
                 // 2. Fuzzy
