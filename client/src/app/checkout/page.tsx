@@ -40,7 +40,7 @@ function CheckoutContent() {
                 if (res.ok) {
                     const data = await res.json();
                     // Sort by price
-                    const validPlans = data.sort((a: any) => a.price - b.price);
+                    const validPlans = data.sort((a: any, b: any) => (a.price || 0) - (b.price || 0));
                     setPlans(validPlans);
                 }
             } catch (error) {
