@@ -667,21 +667,21 @@ function LandingContent() {
                         >
                             {(apiPlanGroups.length > 0 ? apiPlanGroups : [
                                 {
-                                    name: 'Standart',
+                                    name: 'Başlangıç',
                                     variants: [
-                                        { duration_months: 1, price: 999, is_active: true } as Plan,
-                                        { duration_months: 3, price: 833, is_active: true } as Plan,
-                                        { duration_months: 12, price: 583, is_active: true } as Plan,
+                                        { id: 'starter-3m', duration_months: 3, price: 766, is_active: true } as Plan,
+                                        { id: 'starter-6m', duration_months: 6, price: 666, is_active: true } as Plan,
+                                        { id: 'starter-12m', duration_months: 12, price: 499, is_active: true } as Plan,
                                     ],
                                     desc: 'Şahıs projeleri için.',
-                                    features: ['Standart Raporlama', 'Poz Arama Motoru', '10 Adet Maliyet Analizi']
+                                    features: ['1 Proje Hakkı', 'Temel Metraj Analizi', 'Standart Raporlama', 'Poz Arama Motoru']
                                 },
                                 {
                                     name: 'Profesyonel',
                                     variants: [
-                                        { duration_months: 1, price: 1199, is_active: true } as Plan,
-                                        { duration_months: 3, price: 999, is_active: true } as Plan,
-                                        { duration_months: 12, price: 667, is_active: true } as Plan,
+                                        { id: 'pro-3m', duration_months: 3, price: 966, is_active: true } as Plan,
+                                        { id: 'pro-6m', duration_months: 6, price: 799, is_active: true } as Plan,
+                                        { id: 'pro-12m', duration_months: 12, price: 666, is_active: true } as Plan,
                                     ],
                                     desc: 'Profesyonel ekipler.',
                                     features: ['Sınırsız Proje', '7/24 Öncelikli Destek', 'Güncel Birim Fiyatlar', 'Excel Raporlama', 'Sınırsız Analiz'],
@@ -742,77 +742,74 @@ function LandingContent() {
                                                 <p className="text-slate-500 text-xs font-medium">{plan.desc}</p>
                                             </div>
 
-                                            {/* Price */}
-                                            <div className="mb-8 min-h-[80px]">
+                                            {/* Price (Large Display) */}
+                                            <div className="mb-8 min-h-[70px]">
                                                 {plan.displayPrice === 'Bize Ulaşın' ? (
                                                     <span className="text-3xl font-bold text-white tracking-tight">Bize Ulaşın</span>
                                                 ) : (
-                                                    <div>
-                                                        <div className="flex items-baseline gap-1">
-                                                            <span className="text-4xl lg:text-5xl font-bold text-white tracking-tight">
-                                                                {plan.displayPrice}
-                                                            </span>
-                                                            <span className="text-slate-500 text-sm font-medium">/ay</span>
-                                                        </div>
-                                                        {plan.saving && (
-                                                            <div className="mt-2">
-                                                                <span className="text-emerald-500 text-[10px] font-black uppercase tracking-wider">
-                                                                    %{plan.saving}'e VARAN TASARRUF
-                                                                </span>
-                                                            </div>
-                                                        )}
+                                                    <div className="flex items-baseline gap-1">
+                                                        <span className="text-4xl lg:text-5xl font-extrabold text-white tracking-tighter">
+                                                            {plan.displayPrice}
+                                                        </span>
+                                                        <span className="text-slate-500 text-sm font-medium">/ay</span>
                                                     </div>
                                                 )}
                                             </div>
 
-                                            {/* Duration Selectors (New) */}
+                                            {/* Features List */}
+                                            <div className="mb-8 flex-1">
+                                                <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-4 ml-1">Neler Dahil?</div>
+                                                <ul className="space-y-3.5">
+                                                    {(plan.features || []).map((f: string, i: number) => (
+                                                        <li key={i} className="flex items-start gap-3">
+                                                            <div className={`mt-0.5 w-5 h-5 rounded-full flex items-center justify-center shrink-0 ${plan.special ? 'bg-indigo-500/20 text-indigo-400' : 'bg-slate-800 text-slate-400'}`}>
+                                                                <Check className="w-3 h-3" strokeWidth={3} />
+                                                            </div>
+                                                            <span className="text-[13px] text-slate-300 font-medium leading-tight">
+                                                                {f}
+                                                            </span>
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+
+                                            {/* Duration Selectors (Stacked Cards) */}
                                             {plan.name !== 'Kurumsal' && plan.variants && plan.variants.length > 0 && (
-                                                <div className="mb-8 space-y-2">
-                                                    {plan.variants.filter((v: any) => [1, 3, 6, 12].includes(v.duration_months)).map((v: any) => (
+                                                <div className="mb-8 space-y-3">
+                                                    <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3 ml-1">Süre Seçenekleri</div>
+                                                    {plan.variants.filter((v: any) => [3, 6, 12].includes(v.duration_months)).map((v: any) => (
                                                         <button
                                                             key={v.duration_months}
                                                             onClick={() => setSelectedDurations(prev => ({ ...prev, [plan.name]: v.duration_months }))}
-                                                            className={`w-full p-4 rounded-2xl flex items-center justify-between transition-all duration-300 border ${plan.currentDur === v.duration_months
-                                                                ? 'bg-indigo-600/10 border-indigo-500/50 shadow-lg shadow-indigo-500/10 scale-[1.02]'
-                                                                : 'bg-slate-800/20 border-slate-800 hover:border-slate-700'
+                                                            className={`w-full p-4 rounded-2xl flex items-center justify-between transition-all duration-300 border-2 ${plan.currentDur === v.duration_months
+                                                                ? 'bg-indigo-600/10 border-indigo-500 shadow-xl shadow-indigo-500/10 ring-1 ring-indigo-500/20'
+                                                                : 'bg-slate-900/50 border-slate-800 hover:border-slate-700 hover:bg-slate-900'
                                                                 }`}
                                                         >
-                                                            <div className="flex items-center gap-3">
-                                                                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${plan.currentDur === v.duration_months ? 'border-indigo-500 bg-indigo-500' : 'border-slate-700'
+                                                            <div className="flex items-center gap-4">
+                                                                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${plan.currentDur === v.duration_months ? 'border-indigo-500 bg-indigo-500' : 'border-slate-800'
                                                                     }`}>
-                                                                    {plan.currentDur === v.duration_months && <Check className="w-3 h-3 text-white" strokeWidth={4} />}
+                                                                    {plan.currentDur === v.duration_months && <div className="w-2 h-2 rounded-full bg-white animate-pulse" />}
                                                                 </div>
-                                                                <span className={`text-sm font-bold ${plan.currentDur === v.duration_months ? 'text-white' : 'text-slate-400'}`}>
-                                                                    {v.duration_months} Ay
-                                                                </span>
+                                                                <div className="text-left">
+                                                                    <div className={`text-[13px] font-bold ${plan.currentDur === v.duration_months ? 'text-white' : 'text-slate-300'}`}>
+                                                                        {v.duration_months} Aylık Plan
+                                                                    </div>
+                                                                    <div className="text-[9px] font-medium text-slate-500 uppercase tracking-tighter">
+                                                                        {v.duration_months === 12 ? 'Yıllık Yenilenir' : `${v.duration_months} Aylık Ödeme`}
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                             <div className="text-right">
-                                                                <div className={`text-sm font-black ${plan.currentDur === v.duration_months ? 'text-white' : 'text-slate-300'}`}>
+                                                                <div className={`text-[14px] font-black ${plan.currentDur === v.duration_months ? 'text-white' : 'text-slate-200'}`}>
                                                                     ₺{v.price.toLocaleString('tr-TR')}
                                                                 </div>
-                                                                <div className="text-[9px] font-bold text-slate-500 uppercase tracking-tighter"> / AY</div>
+                                                                <div className="text-[9px] font-bold text-slate-500 uppercase">/ AY</div>
                                                             </div>
                                                         </button>
                                                     ))}
                                                 </div>
                                             )}
-
-                                            {/* Divider */}
-                                            <div className="w-full h-px bg-slate-800 mb-8"></div>
-
-                                            {/* Features */}
-                                            <ul className="space-y-4 mb-8 flex-1">
-                                                {(plan.features || []).map((f: string, i: number) => (
-                                                    <li key={i} className="flex items-start gap-3">
-                                                        <div className={`mt-0.5 w-5 h-5 rounded-full flex items-center justify-center shrink-0 ${plan.special ? 'bg-indigo-500/20 text-indigo-400' : 'bg-slate-800 text-slate-400'}`}>
-                                                            <Check className="w-3 h-3" strokeWidth={3} />
-                                                        </div>
-                                                        <span className="text-[13px] text-slate-300 font-medium leading-tight">
-                                                            {f}
-                                                        </span>
-                                                    </li>
-                                                ))}
-                                            </ul>
 
                                             {/* Action Button */}
                                             <button
@@ -832,8 +829,8 @@ function LandingContent() {
                                                         }
                                                     }
                                                 }}
-                                                className={`w-full py-4 rounded-xl font-bold text-[13px] uppercase tracking-widest transition-all duration-300 transform active:scale-95 ${plan.special
-                                                    ? 'bg-gradient-to-r from-indigo-600 to-blue-600 text-white hover:shadow-lg hover:shadow-indigo-500/25 ring-2 ring-indigo-500/20'
+                                                className={`w-full py-5 rounded-2xl font-black text-[14px] uppercase tracking-[0.2em] transition-all duration-300 transform active:scale-[0.98] ${plan.special
+                                                    ? 'bg-gradient-to-r from-indigo-600 to-blue-600 text-white hover:shadow-[0_0_30px_rgb(79,70,229,0.4)] ring-2 ring-indigo-500/20'
                                                     : 'bg-slate-800 text-white hover:bg-slate-700 border border-slate-700'
                                                     }`}
                                             >

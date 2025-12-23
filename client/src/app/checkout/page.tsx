@@ -39,8 +39,8 @@ function CheckoutContent() {
                 const res = await fetch('/api/subscription/plans');
                 if (res.ok) {
                     const data = await res.json();
-                    // Filter out free plans/enterprise and sort by price
-                    const validPlans = data.filter((p: any) => p.price > 0).sort((a: any, b: any) => a.price - b.price);
+                    // Sort by price
+                    const validPlans = data.sort((a: any) => a.price - b.price);
                     setPlans(validPlans);
                 }
             } catch (error) {
@@ -178,9 +178,9 @@ function CheckoutContent() {
                                                     )}
                                                     <div className="my-6">
                                                         <span className="text-4xl font-black text-white">₺{plan.price}</span>
-                                                        <span className="text-slate-400 text-lg"> / {plan.duration_months} ay</span>
+                                                        <span className="text-slate-400 text-lg"> / AY</span>
                                                     </div>
-                                                    <div className="text-slate-500 text-sm mb-6">≈ ₺{monthlyPrice}/ay</div>
+                                                    <div className="text-slate-500 text-sm mb-6">{plan.duration_months} Aylık Ödeme</div>
                                                     <button className={`w-full py-4 rounded-2xl font-bold text-lg transition-all ${plan.tag
                                                         ? 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-lg shadow-blue-500/40 hover:shadow-blue-500/60 hover:scale-[1.02]'
                                                         : 'bg-slate-800 text-white hover:bg-slate-700 hover:scale-[1.02]'
@@ -207,7 +207,7 @@ function CheckoutContent() {
                                         <div className="flex justify-between items-center">
                                             <div>
                                                 <span className="text-slate-400 text-sm">Seçilen Plan</span>
-                                                <div className="text-xl font-bold text-white">{selectedPlanData.name}</div>
+                                                <div className="text-xl font-bold text-white">{selectedPlanData.name} ({selectedPlanData.duration_months} Ay)</div>
                                             </div>
                                             <div className="text-3xl font-black text-white">₺{selectedPlanData.price}</div>
                                         </div>
