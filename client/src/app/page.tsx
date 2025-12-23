@@ -94,7 +94,7 @@ function LandingContent() {
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
-    const [billingCycle, setBillingCycle] = useState<'monthly' | 'quarterly' | 'annual'>('annual');
+    const [selectedDurations, setSelectedDurations] = useState<Record<string, number>>({});
 
     // Form States
     const [email, setEmail] = useState('');
@@ -126,17 +126,18 @@ function LandingContent() {
                             // Map existing hardcoded descriptions for visual consistency
                             const descs: Record<string, string> = {
                                 'Standart': 'Şahıs projeleri için.',
+                                'Başlangıç': 'Şahıs projeleri için.',
                                 'Profesyonel': 'Profesyonel ekipler.',
                                 'Kurumsal': 'Büyük ölçekli yapılar.'
                             };
 
                             groups[plan.name] = {
-                                name: plan.name,
+                                name: plan.name === 'Standart' ? 'Başlangıç' : plan.name,
                                 tag: plan.tag,
                                 features: typeof plan.features === 'string' ? JSON.parse(plan.features || '[]') : (plan.features || []),
                                 variants: [],
                                 special: plan.name === 'Profesyonel', // Mark as popüler
-                                desc: descs[plan.name] || ''
+                                desc: descs[plan.name] || descs['Başlangıç'] || ''
                             };
                         }
                         groups[plan.name].variants.push(plan);
@@ -148,6 +149,15 @@ function LandingContent() {
                         return g;
                     });
 
+                    // Initialize selected durations: default to 12 months if available
+                    const initialDurations: Record<string, number> = {};
+                    groupArray.forEach(g => {
+                        if (g.variants.length > 0) {
+                            const annual = g.variants.find(v => v.duration_months === 12);
+                            initialDurations[g.name] = annual ? 12 : g.variants[g.variants.length - 1].duration_months;
+                        }
+                    });
+                    setSelectedDurations(initialDurations);
                     setApiPlanGroups(groupArray);
                 }
             } catch (error) {
@@ -195,7 +205,8 @@ function LandingContent() {
                     localStorage.removeItem('remembered_password');
                 }
                 setShowAuthModal(false);
-                router.push('/app');
+                const next = searchParams.get('next') || '/app';
+                router.push(next);
             } else {
                 if (password !== confirmPassword) throw new Error('Şifreler eşleşmiyor.');
                 if (!acceptTerms) throw new Error('Kullanım şartlarını kabul etmelisiniz.');
@@ -211,7 +222,8 @@ function LandingContent() {
 
                 await login(email, password);
                 setShowAuthModal(false);
-                router.push('/app');
+                const next = searchParams.get('next') || '/app';
+                router.push(next);
             }
         } catch (err: any) {
             setError(err.message || 'Bir hata oluştu.');
@@ -643,75 +655,6 @@ function LandingContent() {
                             <p className="text-lg text-slate-400 font-medium leading-relaxed max-w-xl mx-auto">
                                 Ücretsiz deneme ile başlayın, istediğiniz zaman iptal edin.
                             </p>
-
-                            {/* TOGGLE VISUAL */}
-                            <div className="mt-12 flex justify-center">
-                                <div className="bg-slate-900/80 backdrop-blur-md p-1.5 rounded-2xl border border-slate-800 inline-flex relative">
-                                    {[
-                                        { id: 'monthly', label: '1 AYLIK' },
-                                        {
-                                            id: 'quarterly', label: '3 AYLIK', promo: (() => {
-                                                const plans = apiPlanGroups.length > 0 ? apiPlanGroups : [
-                                                    { name: 'Standart', variants: [{ duration_months: 1, price: 999 }, { duration_months: 3, price: 833 }] },
-                                                    { name: 'Profesyonel', variants: [{ duration_months: 1, price: 1199 }, { duration_months: 3, price: 999 }] }
-                                                ];
-                                                let maxSaving = 0;
-                                                plans.forEach((g: any) => {
-                                                    const monthly = g.variants.find((v: any) => v.duration_months === 1);
-                                                    const quarterly = g.variants.find((v: any) => v.duration_months === 3);
-                                                    if (monthly?.price && quarterly?.price) {
-                                                        const saving = Math.round(((monthly.price - quarterly.price) / monthly.price) * 100);
-                                                        if (saving > maxSaving) maxSaving = saving;
-                                                    }
-                                                });
-                                                return maxSaving > 0 ? `%${maxSaving} TASARRUF` : null;
-                                            })()
-                                        },
-                                        {
-                                            id: 'annual', label: '12 AYLIK', promo: (() => {
-                                                const plans = apiPlanGroups.length > 0 ? apiPlanGroups : [
-                                                    { name: 'Standart', variants: [{ duration_months: 1, price: 999 }, { duration_months: 12, price: 583 }] },
-                                                    { name: 'Profesyonel', variants: [{ duration_months: 1, price: 1199 }, { duration_months: 12, price: 667 }] }
-                                                ];
-                                                let maxSaving = 0;
-                                                plans.forEach((g: any) => {
-                                                    const monthly = g.variants.find((v: any) => v.duration_months === 1);
-                                                    const annual = g.variants.find((v: any) => v.duration_months === 12);
-                                                    if (monthly?.price && annual?.price) {
-                                                        const saving = Math.round(((monthly.price - annual.price) / monthly.price) * 100);
-                                                        if (saving > maxSaving) maxSaving = saving;
-                                                    }
-                                                });
-                                                return maxSaving > 0 ? `%${maxSaving}'E VARAN TASARRUF` : null;
-                                            })()
-                                        }
-                                    ].map((cycle) => (
-                                        <button
-                                            key={cycle.id}
-                                            onClick={() => setBillingCycle(cycle.id as any)}
-                                            className={`relative px-6 py-2.5 rounded-xl text-[11px] font-bold transition-all duration-300 flex items-center gap-3 z-10 ${billingCycle === cycle.id ? 'text-white' : 'text-slate-500 hover:text-slate-300'
-                                                }`}
-                                        >
-                                            <span className="tracking-wider">{cycle.label}</span>
-                                            {cycle.promo && (
-                                                <span className={`px-2 py-0.5 rounded-md text-[9px] font-bold tracking-wide ${billingCycle === cycle.id
-                                                    ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/20'
-                                                    : 'bg-slate-800 text-emerald-400 border border-slate-700'
-                                                    }`}>
-                                                    {cycle.promo}
-                                                </span>
-                                            )}
-                                            {billingCycle === cycle.id && (
-                                                <motion.div
-                                                    layoutId="cycle-highlight"
-                                                    className="absolute inset-0 bg-slate-800 border border-slate-700 rounded-xl shadow-sm z-[-1]"
-                                                    transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-                                                />
-                                            )}
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
                         </div>
 
                         {/* CARDS */}
@@ -753,11 +696,13 @@ function LandingContent() {
                             ]).map((plan: any) => {
                                 // Add helper data for rendering compatible with current UI
                                 const getVariant = (months: number) => plan.variants?.find((v: any) => v.duration_months === months);
+                                const currentDur = selectedDurations[plan.name] || (plan.variants && plan.variants.length > 0 ? plan.variants[plan.variants.length - 1].duration_months : 0);
                                 const monthly = getVariant(1);
-                                const current = getVariant(billingCycle === 'annual' ? 12 : billingCycle === 'quarterly' ? 3 : 1);
+                                const current = getVariant(currentDur);
 
                                 return {
                                     ...plan,
+                                    currentDur,
                                     displayPrice: current ? `₺${current.price.toLocaleString('tr-TR')}` : (plan.name === 'Kurumsal' ? 'Bize Ulaşın' : '---'),
                                     originalPrice: monthly?.price && current?.price && current.price < monthly.price ? `₺${monthly.price.toLocaleString('tr-TR')}` : null,
                                     totalPrice: current ? `₺${(current.price * (current.duration_months)).toLocaleString('tr-TR')}` : null,
@@ -772,10 +717,10 @@ function LandingContent() {
                                     className={`relative group h-full`}
                                 >
                                     <div className={`h-full rounded-[2rem] p-1 transition-all duration-500 ${plan.special
-                                        ? 'bg-gradient-to-b from-indigo-500 to-blue-600 shadow-2xl shadow-indigo-500/20 scale-[1.02]'
+                                        ? 'bg-gradient-to-b from-indigo-500 to-blue-600 shadow-2xl shadow-indigo-500/20 scale-[1.05]'
                                         : 'bg-slate-800 hover:bg-slate-700'
                                         }`}>
-                                        <div className={`h-full rounded-[1.9rem] p-8 flex flex-col relative overflow-hidden ${plan.special ? 'bg-slate-900' : 'bg-slate-950'
+                                        <div className={`h-full rounded-[1.9rem] p-8 flex flex-col relative overflow-hidden ${plan.special ? 'bg-slate-900 border border-indigo-500/30' : 'bg-slate-950'
                                             }`}>
                                             {/* Glow Effect */}
                                             {plan.special && (
@@ -785,7 +730,7 @@ function LandingContent() {
                                             {/* Header */}
                                             <div className="mb-8 relative">
                                                 <div className="flex justify-between items-start mb-4">
-                                                    <h3 className={`text-xl font-bold ${plan.special ? 'text-white' : 'text-slate-200'}`}>
+                                                    <h3 className={`text-xl font-bold ${plan.special ? 'text-indigo-400' : 'text-slate-200'}`}>
                                                         {plan.name}
                                                     </h3>
                                                     {plan.special && (
@@ -810,26 +755,47 @@ function LandingContent() {
                                                             <span className="text-slate-500 text-sm font-medium">/ay</span>
                                                         </div>
                                                         {plan.saving && (
-                                                            <div className="mt-4 space-y-2">
-                                                                <div className="flex items-center gap-2">
-                                                                    <span className="text-rose-400 text-xs font-bold line-through opacity-80">
-                                                                        {plan.originalPrice}
-                                                                    </span>
-                                                                    <span className="px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-500 text-[9px] font-black uppercase tracking-wider border border-emerald-500/20">
-                                                                        -%{plan.saving} TASARRUF
-                                                                    </span>
-                                                                </div>
-                                                                {plan.totalPrice && (
-                                                                    <div className="text-emerald-400 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5">
-                                                                        <div className="w-1 h-1 rounded-full bg-emerald-500"></div>
-                                                                        Toplam: {plan.totalPrice}
-                                                                    </div>
-                                                                )}
+                                                            <div className="mt-2">
+                                                                <span className="text-emerald-500 text-[10px] font-black uppercase tracking-wider">
+                                                                    %{plan.saving}'e VARAN TASARRUF
+                                                                </span>
                                                             </div>
                                                         )}
                                                     </div>
                                                 )}
                                             </div>
+
+                                            {/* Duration Selectors (New) */}
+                                            {plan.name !== 'Kurumsal' && plan.variants && plan.variants.length > 0 && (
+                                                <div className="mb-8 space-y-2">
+                                                    {plan.variants.filter((v: any) => [1, 3, 6, 12].includes(v.duration_months)).map((v: any) => (
+                                                        <button
+                                                            key={v.duration_months}
+                                                            onClick={() => setSelectedDurations(prev => ({ ...prev, [plan.name]: v.duration_months }))}
+                                                            className={`w-full p-4 rounded-2xl flex items-center justify-between transition-all duration-300 border ${plan.currentDur === v.duration_months
+                                                                ? 'bg-indigo-600/10 border-indigo-500/50 shadow-lg shadow-indigo-500/10 scale-[1.02]'
+                                                                : 'bg-slate-800/20 border-slate-800 hover:border-slate-700'
+                                                                }`}
+                                                        >
+                                                            <div className="flex items-center gap-3">
+                                                                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${plan.currentDur === v.duration_months ? 'border-indigo-500 bg-indigo-500' : 'border-slate-700'
+                                                                    }`}>
+                                                                    {plan.currentDur === v.duration_months && <Check className="w-3 h-3 text-white" strokeWidth={4} />}
+                                                                </div>
+                                                                <span className={`text-sm font-bold ${plan.currentDur === v.duration_months ? 'text-white' : 'text-slate-400'}`}>
+                                                                    {v.duration_months} Ay
+                                                                </span>
+                                                            </div>
+                                                            <div className="text-right">
+                                                                <div className={`text-sm font-black ${plan.currentDur === v.duration_months ? 'text-white' : 'text-slate-300'}`}>
+                                                                    ₺{v.price.toLocaleString('tr-TR')}
+                                                                </div>
+                                                                <div className="text-[9px] font-bold text-slate-500 uppercase tracking-tighter"> / AY</div>
+                                                            </div>
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                            )}
 
                                             {/* Divider */}
                                             <div className="w-full h-px bg-slate-800 mb-8"></div>
@@ -854,12 +820,20 @@ function LandingContent() {
                                                     if (plan.name === 'Kurumsal') {
                                                         window.open('https://wa.me/905453915840?text=Kurumsal%20hizmetler%20hakkında%20bilgi%20almak%20istiyorum.', '_blank');
                                                     } else {
-                                                        setAuthMode('register');
-                                                        setShowAuthModal(true);
+                                                        const variant = plan.variants?.find((v: any) => v.duration_months === plan.currentDur);
+                                                        const checkoutUrl = `/checkout?plan=${variant?.id}`;
+
+                                                        if (isLoggedIn) {
+                                                            router.push(checkoutUrl);
+                                                        } else {
+                                                            router.push(`/?auth=register&next=${encodeURIComponent(checkoutUrl)}#pricing`);
+                                                            setAuthMode('register');
+                                                            setShowAuthModal(true);
+                                                        }
                                                     }
                                                 }}
                                                 className={`w-full py-4 rounded-xl font-bold text-[13px] uppercase tracking-widest transition-all duration-300 transform active:scale-95 ${plan.special
-                                                    ? 'bg-gradient-to-r from-indigo-600 to-blue-600 text-white hover:shadow-lg hover:shadow-indigo-500/25'
+                                                    ? 'bg-gradient-to-r from-indigo-600 to-blue-600 text-white hover:shadow-lg hover:shadow-indigo-500/25 ring-2 ring-indigo-500/20'
                                                     : 'bg-slate-800 text-white hover:bg-slate-700 border border-slate-700'
                                                     }`}
                                             >
