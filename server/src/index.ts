@@ -95,15 +95,39 @@ interface PozItem {
 let dataset: PozItem[] = [];
 
 // Load dataset from Supabase on startup
-async function loadDataset() {
-    try {
+
+// Helper function to fetch ALL items from Supabase (pagination to bypass 1000 row limit)
+async function fetchAllPozItems() {
+    let allItems: any[] = [];
+    let from = 0;
+    let step = 1000;
+    let hasMore = true;
+
+    while (hasMore) {
         const { data, error, count } = await supabase
             .from('poz_items')
             .select('*', { count: 'exact' })
             .order('code')
-            .limit(100000);
+            .range(from, from + step - 1);
 
         if (error) throw error;
+        
+        if (data) {
+            allItems = [...allItems, ...data];
+        }
+
+        if (!data || data.length < step || (count !== null && allItems.length >= count)) {
+            hasMore = false;
+        } else {
+            from += step;
+        }
+    }
+    return { data: allItems, count: allItems.length };
+}
+
+async function loadDataset() {
+    try {
+        const { data, count } = await fetchAllPozItems();
 
         dataset = (data || []).map((item: any) => ({
             id: item.id?.toString(),
@@ -1379,13 +1403,7 @@ const requireSubscription = async (req: any, res: any, next: any) => {
 
 app.get('/api/dataset', optionalAuthenticateToken, async (req: any, res) => {
     try {
-        const { data: items, error, count } = await supabase
-            .from('poz_items')
-            .select('*', { count: 'exact' })
-            .order('code')
-            .limit(100000);
-
-        if (error) throw error;
+        const { data: items, count } = await fetchAllPozItems();
 
         const formattedItems = (items || []).map((item: any) => ({
             id: item.id?.toString(),
