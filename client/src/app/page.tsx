@@ -149,16 +149,24 @@ function LandingContent() {
                         return g;
                     });
 
-                    // Initialize selected durations: default to 12 months if available
-                    const initialDurations: Record<string, number> = {};
-                    groupArray.forEach(g => {
-                        if (g.variants.length > 0) {
-                            const annual = g.variants.find(v => v.duration_months === 12);
-                            initialDurations[g.name] = annual ? 12 : g.variants[g.variants.length - 1].duration_months;
-                        }
-                    });
-                    setSelectedDurations(initialDurations);
-                    setApiPlanGroups(groupArray);
+                    // CHECK: If the API data is "old" (missing 1-month plans for Başlangıç/Profesyonel), 
+                    // we might want to ignore it or merge it to avoid flickering back to old prices.
+                    const hasOneMonth = groupArray.some(g => g.variants.some(v => v.duration_months === 1));
+
+                    if (hasOneMonth) {
+                        // Initialize selected durations: default to 12 months if available
+                        const initialDurations: Record<string, number> = {};
+                        groupArray.forEach(g => {
+                            if (g.variants.length > 0) {
+                                const annual = g.variants.find(v => v.duration_months === 12);
+                                initialDurations[g.name] = annual ? 12 : g.variants[g.variants.length - 1].duration_months;
+                            }
+                        });
+                        setSelectedDurations(prev => ({ ...prev, ...initialDurations }));
+                        setApiPlanGroups(groupArray);
+                    } else {
+                        console.log('API returned outdated plans (missing 1-month options). Using hardcoded fallbacks.');
+                    }
                 }
             } catch (error) {
                 console.error('Error fetching plans:', error);
@@ -669,9 +677,9 @@ function LandingContent() {
                                 {
                                     name: 'Başlangıç',
                                     variants: [
-                                        { id: 'starter-3m', duration_months: 3, price: 766, is_active: true } as Plan,
-                                        { id: 'starter-6m', duration_months: 6, price: 666, is_active: true } as Plan,
-                                        { id: 'starter-12m', duration_months: 12, price: 499, is_active: true } as Plan,
+                                        { id: 'starter-1m', duration_months: 1, price: 1299, is_active: true } as Plan,
+                                        { id: 'starter-3m', duration_months: 3, price: 2499, is_active: true } as Plan,
+                                        { id: 'starter-12m', duration_months: 12, price: 6999, is_active: true } as Plan,
                                     ],
                                     desc: 'Şahıs projeleri için.',
                                     features: ['1 Proje Hakkı', 'Temel Metraj Analizi', 'Standart Raporlama', 'Poz Arama Motoru']
@@ -679,9 +687,9 @@ function LandingContent() {
                                 {
                                     name: 'Profesyonel',
                                     variants: [
-                                        { id: 'pro-3m', duration_months: 3, price: 966, is_active: true } as Plan,
-                                        { id: 'pro-6m', duration_months: 6, price: 799, is_active: true } as Plan,
-                                        { id: 'pro-12m', duration_months: 12, price: 666, is_active: true } as Plan,
+                                        { id: 'pro-1m', duration_months: 1, price: 1499, is_active: true } as Plan,
+                                        { id: 'pro-3m', duration_months: 3, price: 2899, is_active: true } as Plan,
+                                        { id: 'pro-12m', duration_months: 12, price: 7999, is_active: true } as Plan,
                                     ],
                                     desc: 'Profesyonel ekipler.',
                                     features: ['Sınırsız Proje', '7/24 Öncelikli Destek', 'Güncel Birim Fiyatlar', 'Excel Raporlama', 'Sınırsız Analiz'],
@@ -769,7 +777,7 @@ function LandingContent() {
                                                 {/* Duration Selectors (Stacked Cards) */}
                                                 {plan.name !== 'Kurumsal' && plan.variants && plan.variants.length > 0 && (
                                                     <div className="mb-8 space-y-3">
-                                                        {plan.variants.filter((v: any) => [3, 6, 12].includes(v.duration_months)).map((v: any) => (
+                                                        {plan.variants.filter((v: any) => [1, 3, 12].includes(v.duration_months)).map((v: any) => (
                                                             <button
                                                                 key={v.duration_months}
                                                                 onClick={() => setSelectedDurations(prev => ({ ...prev, [plan.name]: v.duration_months }))}
@@ -785,10 +793,10 @@ function LandingContent() {
                                                                 )}
                                                                 <div className="flex flex-col text-left">
                                                                     <span className={`text-[15px] font-black ${plan.currentDur === v.duration_months ? 'text-white' : 'text-slate-300'}`}>
-                                                                        {v.duration_months} Aylık Plan
+                                                                        {v.duration_months === 1 ? 'Aylık Plan' : `${v.duration_months} Aylık Plan`}
                                                                     </span>
                                                                     <span className="text-[10px] font-bold text-slate-500 uppercase tracking-tighter">
-                                                                        {v.duration_months === 12 ? 'Yıllık Yenilenir' : `${v.duration_months} Aylık Ödeme`}
+                                                                        {v.duration_months === 12 ? 'Yıllık Yenilenir' : v.duration_months === 1 ? 'Aylık Yenilenir' : `${v.duration_months} Aylık Ödeme`}
                                                                     </span>
                                                                 </div>
                                                                 <div className="flex flex-col text-right">

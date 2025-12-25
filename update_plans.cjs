@@ -1,4 +1,4 @@
-const Database = require('./server/node_modules/better-sqlite3');
+const Database = require('better-sqlite3');
 const path = require('path');
 
 const dbPath = path.join(__dirname, 'server/database.sqlite');
@@ -36,15 +36,15 @@ try {
         // FREE Plan
         { id: 'plan-free', name: 'FREE', price: 0, duration_months: 1, features: featuresFree, tier: 'free', badge: null, discount: 0 },
 
-        // Standard Plans
-        { id: 'plan-std-1m', name: 'STANDART', price: 800, duration_months: 1, features: featuresStd, tier: 'standard', badge: 'En Çok Tercih Edilen', discount: 0 },
-        { id: 'plan-std-6m', name: 'STANDART', price: 4799, duration_months: 6, features: featuresStd, tier: 'standard', badge: 'En Çok Tercih Edilen', discount: 0 },
-        { id: 'plan-std-12m', name: 'STANDART', price: 8640, duration_months: 12, features: featuresStd, tier: 'standard', badge: 'En Çok Tercih Edilen', discount: 10 },
+        // Standard Plans (UI: Başlangıç)
+        { id: 'plan-std-1m', name: 'Standart', price: 1299, duration_months: 1, features: featuresStd, tier: 'standard', badge: null, discount: 0 },
+        { id: 'plan-std-3m', name: 'Standart', price: 2499, duration_months: 3, features: featuresStd, tier: 'standard', badge: null, discount: 0 },
+        { id: 'plan-std-12m', name: 'Standart', price: 6999, duration_months: 12, features: featuresStd, tier: 'standard', badge: 'En Popüler', discount: 0 },
 
-        // Pro Plans
-        { id: 'plan-pro-1m', name: 'PRO', price: 1200, duration_months: 1, features: featuresPro, tier: 'pro', badge: null, discount: 0 },
-        { id: 'plan-pro-6m', name: 'PRO', price: 6499, duration_months: 6, features: featuresPro, tier: 'pro', badge: null, discount: 0 },
-        { id: 'plan-pro-12m', name: 'PRO', price: 11999, duration_months: 12, features: featuresPro, tier: 'pro', badge: null, discount: 15 }
+        // Professional Plans (UI: Profesyonel)
+        { id: 'plan-pro-1m', name: 'Profesyonel', price: 1499, duration_months: 1, features: featuresPro, tier: 'pro', badge: null, discount: 0 },
+        { id: 'plan-pro-3m', name: 'Profesyonel', price: 2899, duration_months: 3, features: featuresPro, tier: 'pro', badge: null, discount: 0 },
+        { id: 'plan-pro-12m', name: 'Profesyonel', price: 7999, duration_months: 12, features: featuresPro, tier: 'pro', badge: 'En Popüler', discount: 0 }
     ];
 
     plans.forEach(plan => {

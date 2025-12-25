@@ -2,16 +2,19 @@ import supabase from './supabase';
 import dotenv from 'dotenv';
 dotenv.config();
 
+console.log('Supabase URL:', process.env.SUPABASE_URL);
+console.log('Supabase Key Prefix:', process.env.SUPABASE_SERVICE_KEY ? process.env.SUPABASE_SERVICE_KEY.substring(0, 10) : 'MISSING');
+
 // const supabaseUrl = process.env.SUPABASE_URL; ... removed because we use importing supabase
 
 const plans = [
-    // Başlangıç Plans
-    { id: 'starter-3m', name: 'Başlangıç', price: 2299, duration_months: 3, features: ["1 Proje Hakkı", "Temel Metraj Analizi", "Standart Raporlama", "Poz Arama Motoru"], is_active: true },
-    { id: 'starter-6m', name: 'Başlangıç', price: 3999, duration_months: 6, features: ["1 Proje Hakkı", "Temel Metraj Analizi", "Standart Raporlama", "Poz Arama Motoru"], is_active: true },
-    { id: 'starter-12m', name: 'Başlangıç', price: 5999, duration_months: 12, features: ["1 Proje Hakkı", "Temel Metraj Analizi", "Standart Raporlama", "Poz Arama Motoru"], is_active: true },
+    // Başlangıç (Standart) Plans
+    { id: 'starter-1m', name: 'Başlangıç', price: 1299, duration_months: 1, features: ["1 Proje Hakkı", "Temel Metraj Analizi", "Standart Raporlama", "Poz Arama Motoru"], is_active: true },
+    { id: 'starter-3m', name: 'Başlangıç', price: 2499, duration_months: 3, features: ["1 Proje Hakkı", "Temel Metraj Analizi", "Standart Raporlama", "Poz Arama Motoru"], is_active: true },
+    { id: 'starter-12m', name: 'Başlangıç', price: 6999, duration_months: 12, features: ["1 Proje Hakkı", "Temel Metraj Analizi", "Standart Raporlama", "Poz Arama Motoru"], is_active: true },
     // Profesyonel Plans
+    { id: 'pro-1m', name: 'Profesyonel', price: 1499, duration_months: 1, features: ["Sınırsız Proje", "Gelişmiş AI Analiz", "Excel & PDF Export", "7/24 Öncelikli Destek", "Güncel Birim Fiyatlar"], is_active: true, tag: 'En Popüler' },
     { id: 'pro-3m', name: 'Profesyonel', price: 2899, duration_months: 3, features: ["Sınırsız Proje", "Gelişmiş AI Analiz", "Excel & PDF Export", "7/24 Öncelikli Destek", "Güncel Birim Fiyatlar"], is_active: true, tag: 'En Popüler' },
-    { id: 'pro-6m', name: 'Profesyonel', price: 4799, duration_months: 6, features: ["Sınırsız Proje", "Gelişmiş AI Analiz", "Excel & PDF Export", "7/24 Öncelikli Destek", "Güncel Birim Fiyatlar"], is_active: true, tag: 'En Popüler' },
     { id: 'pro-12m', name: 'Profesyonel', price: 7999, duration_months: 12, features: ["Sınırsız Proje", "Gelişmiş AI Analiz", "Excel & PDF Export", "7/24 Öncelikli Destek", "Güncel Birim Fiyatlar"], is_active: true, tag: 'En Popüler' }
 ];
 
