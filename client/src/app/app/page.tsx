@@ -855,7 +855,7 @@ export default function AnalysisPage() {
                 body: JSON.stringify({
                     name: projectName,
                     description: projectDescription,
-                    ikn: iknNumber ? `${iknYear}/${iknNumber}` : undefined,
+                    tenderRegistrationNumber: iknNumber ? `${iknYear}/${iknNumber}` : undefined,
                     totalCost: totalCostVal,
                     items: results
                 })
