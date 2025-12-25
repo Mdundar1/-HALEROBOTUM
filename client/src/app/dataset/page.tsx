@@ -277,41 +277,44 @@ export default function DatasetPage() {
 
             <div className="max-w-[1600px] mx-auto p-6 relative z-10">
                 {/* Compact Header */}
-                <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-6">
-                    <div>
-                        <Link href="/" className="inline-flex items-center gap-2 text-indigo-600 hover:text-indigo-700 mb-2 transition-colors font-medium text-sm">
+                <div className="flex flex-col lg:flex-row justify-between items-end gap-4 mb-8">
+                    <div className="flex-1">
+                        <Link href="/" className="inline-flex items-center gap-2 text-indigo-600 hover:text-indigo-700 mb-3 transition-colors font-semibold text-sm">
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
                             Ana Sayfa
                         </Link>
-                        <h1 className="text-3xl font-black gradient-text mb-1">Dataset Yönetimi</h1>
-                        <p className="text-gray-600 text-sm">POZ verilerini yükleyin ve yönetin</p>
+                        <h1 className="text-4xl font-black gradient-text mb-2 tracking-tight">Dataset Yönetimi</h1>
+                        <p className="text-slate-500 font-medium">POZ verilerini yükleyin ve merkezi veritabanını yönetin</p>
                     </div>
-                    <div className="flex flex-wrap gap-3 w-full lg:w-auto">
-                        <div className="card px-6 py-3 flex-1 lg:flex-none text-center lg:text-left">
-                            <span className="text-gray-500 text-xs block mb-1">Toplam Kayıt</span>
-                            <span className="text-2xl font-black gradient-text">{dataset.length.toLocaleString()}</span>
+                    <div className="flex flex-wrap items-center gap-3 w-full lg:w-auto">
+                        <div className="bg-white/80 backdrop-blur-md border border-slate-200 px-6 py-2.5 rounded-2xl shadow-sm flex items-center gap-4">
+                            <div className="flex flex-col">
+                                <span className="text-slate-400 text-[10px] font-bold uppercase tracking-wider">Toplam Kayıt</span>
+                                <span className="text-2xl font-black text-slate-900 leading-none">{dataset.length.toLocaleString()}</span>
+                            </div>
+                            <div className="w-10 h-10 bg-indigo-50 rounded-xl flex items-center justify-center">
+                                <svg className="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"></path></svg>
+                            </div>
                         </div>
-                        <button onClick={handleExportJson} disabled={dataset.length === 0} className="btn-primary px-5 py-2 text-sm disabled:opacity-50 flex-1 lg:flex-none justify-center">
-                            <div className="flex items-center gap-2">
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                                Export
-                            </div>
+                        <button onClick={handleExportJson} disabled={dataset.length === 0} className="btn-primary px-6 py-3 text-sm disabled:opacity-50 flex items-center gap-2">
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                            Export
                         </button>
-                        <button onClick={handleClear} className="bg-red-50 border border-red-200 text-red-600 hover:bg-red-100 px-5 py-2 rounded-xl font-semibold text-sm transition-all flex-1 lg:flex-none justify-center">
-                            <div className="flex items-center gap-2">
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                                Temizle
-                            </div>
+                        <button onClick={handleClear} className="bg-white border border-red-100 text-red-600 hover:bg-red-50 px-6 py-3 rounded-2xl font-bold text-sm transition-all flex items-center gap-2 shadow-sm">
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                            Temizle
                         </button>
                     </div>
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
                     {/* Compact Upload Sidebar */}
-                    <div className="col-span-1 lg:col-span-3 space-y-4">
-                        <div className="card p-5">
-                            <h2 className="text-lg font-bold mb-3 gradient-text flex items-center gap-2">
-                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+                    <div className="col-span-1 lg:col-span-3 space-y-6">
+                        <div className="card p-6 shadow-premium">
+                            <h2 className="text-xl font-black mb-4 text-slate-800 flex items-center gap-2">
+                                <div className="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center">
+                                    <svg className="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+                                </div>
                                 Dosya Yükle
                             </h2>
 
@@ -342,7 +345,7 @@ export default function DatasetPage() {
                                 </div>
                             )}
 
-                            <div className="border-2 border-dashed border-indigo-300 hover:border-indigo-500 rounded-xl p-6 text-center transition-all relative group cursor-pointer bg-indigo-50/50 hover:bg-indigo-50 mb-4">
+                            <div className="border-2 border-dashed border-slate-200 hover:border-indigo-400 rounded-2xl p-8 text-center transition-all relative group cursor-pointer bg-slate-50/50 hover:bg-indigo-50/30 mb-6">
                                 <input
                                     type="file"
                                     accept=".xlsx,.xls,.pdf,.png,.jpg,.jpeg"
@@ -356,12 +359,13 @@ export default function DatasetPage() {
                                     disabled={isUploading}
                                     className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20 disabled:cursor-not-allowed"
                                 />
-                                <div className="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-2 group-hover:scale-110 transition-transform">
-                                    <svg className="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+                                <div className="w-14 h-14 bg-white rounded-2xl shadow-sm flex items-center justify-center mx-auto mb-4 group-hover:scale-110 group-hover:shadow-md transition-all duration-300">
+                                    <svg className="w-7 h-7 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
                                 </div>
-                                <p className="text-xs text-gray-600">
-                                    {isUploading ? 'Yükleniyor...' : 'Excel/PDF yükle'}
+                                <p className="text-sm font-bold text-slate-700 mb-1">
+                                    {isUploading ? 'Yükleniyor...' : 'Excel veya PDF'}
                                 </p>
+                                <p className="text-[10px] text-slate-400 font-medium uppercase tracking-wider">Sürükle veya Tıkla</p>
                             </div>
 
                             <div className="pt-4 border-t border-gray-200">
@@ -391,38 +395,40 @@ export default function DatasetPage() {
 
                     {/* Optimized Table - Full Width */}
                     <div className="col-span-1 lg:col-span-9">
-                        <div className="card p-0 overflow-hidden">
-                            <div className="p-4 bg-slate-50 border-b border-slate-100">
-                                <h3 className="font-bold text-slate-800 text-lg flex items-center gap-2">
-                                    <svg className="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                                    Dataset Önizleme
-                                </h3>
-                            </div>
-                            <div className="overflow-auto max-h-[700px]">
-                                <table className="w-full text-left">
-                                    <thead className="bg-slate-50 text-slate-700 sticky top-0 z-10 shadow-sm">
-                                        <tr>
-                                            <th className="p-2 font-semibold text-xs" style={{ width: '110px', minWidth: '110px', maxWidth: '110px' }}>
-                                                <div className="flex items-center gap-1">
-                                                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14"></path></svg>
+                        <div className="card p-0 overflow-hidden shadow-premium min-h-[600px] flex flex-col">
+                            <div className="overflow-auto flex-1">
+                                <table className="w-full text-left border-collapse">
+                                    <thead className="sticky top-0 z-20">
+                                        <tr className="bg-slate-900 text-white">
+                                            <th className="p-4 font-bold text-[10px] uppercase tracking-widest border-b border-slate-800" style={{ width: '140px' }}>
+                                                <div className="flex items-center gap-2">
+                                                    <div className="w-6 h-6 bg-slate-800 rounded flex items-center justify-center">
+                                                        <svg className="w-3 h-3 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14"></path></svg>
+                                                    </div>
                                                     Poz No
                                                 </div>
                                             </th>
-                                            <th className="p-3 font-semibold text-xs" style={{ minWidth: '300px' }}>
-                                                <div className="flex items-center gap-1">
-                                                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
-                                                    Tanım
+                                            <th className="p-4 font-bold text-[10px] uppercase tracking-widest border-b border-slate-800">
+                                                <div className="flex items-center gap-2">
+                                                    <div className="w-6 h-6 bg-slate-800 rounded flex items-center justify-center">
+                                                        <svg className="w-3 h-3 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                                                    </div>
+                                                    Tanım / Açıklama
                                                 </div>
                                             </th>
-                                            <th className="p-3 font-semibold text-xs text-center" style={{ width: '80px', minWidth: '80px' }}>
-                                                <div className="flex items-center justify-center gap-1">
-                                                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"></path></svg>
+                                            <th className="p-4 font-bold text-[10px] uppercase tracking-widest border-b border-slate-800 text-center" style={{ width: '100px' }}>
+                                                <div className="flex items-center justify-center gap-2">
+                                                    <div className="w-6 h-6 bg-slate-800 rounded flex items-center justify-center">
+                                                        <svg className="w-3 h-3 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"></path></svg>
+                                                    </div>
                                                     Birim
                                                 </div>
                                             </th>
-                                            <th className="p-2 text-right font-semibold text-xs" style={{ width: '120px', minWidth: '120px', maxWidth: '120px' }}>
-                                                <div className="flex items-center justify-end gap-1">
-                                                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                            <th className="p-4 font-bold text-[10px] uppercase tracking-widest border-b border-slate-800 text-right" style={{ width: '150px' }}>
+                                                <div className="flex items-center justify-end gap-2">
+                                                    <div className="w-6 h-6 bg-slate-800 rounded flex items-center justify-center">
+                                                        <svg className="w-3 h-3 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                                    </div>
                                                     Birim Fiyat
                                                 </div>
                                             </th>
@@ -452,11 +458,13 @@ export default function DatasetPage() {
                                         ))}
                                         {dataset.length === 0 && (
                                             <tr>
-                                                <td colSpan={4} className="p-12 text-center">
-                                                    <div className="text-gray-400">
-                                                        <svg className="w-16 h-16 mx-auto mb-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path></svg>
-                                                        <p className="text-sm">Henüz veri yok.</p>
-                                                        <p className="text-xs mt-1">Sol panelden veri yükleyin.</p>
+                                                <td colSpan={4} className="p-20 text-center">
+                                                    <div className="max-w-xs mx-auto">
+                                                        <div className="w-20 h-20 bg-slate-50 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-inner">
+                                                            <svg className="w-10 h-10 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path></svg>
+                                                        </div>
+                                                        <h4 className="text-lg font-bold text-slate-800 mb-2">Henüz Veri Yok</h4>
+                                                        <p className="text-sm text-slate-500 font-medium">Dataset şu an boş görünüyor. Sol panelden yeni veriler yükleyerek başlayabilirsiniz.</p>
                                                     </div>
                                                 </td>
                                             </tr>
