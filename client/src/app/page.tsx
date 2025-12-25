@@ -716,126 +716,118 @@ function LandingContent() {
                                     variants={fadeInUp}
                                     className={`relative group h-full`}
                                 >
-                                    <div className={`h-full rounded-[2rem] p-1 transition-all duration-500 ${plan.special
-                                        ? 'bg-gradient-to-b from-indigo-500 to-blue-600 shadow-2xl shadow-indigo-500/20 scale-[1.05]'
+                                    <div className={`h-full rounded-[2.5rem] p-1 transition-all duration-500 ${plan.special
+                                        ? 'bg-gradient-to-b from-indigo-500 to-blue-600 shadow-2xl shadow-indigo-500/20 scale-[1.02]'
                                         : 'bg-slate-800 hover:bg-slate-700'
                                         }`}>
-                                        <div className={`h-full rounded-[1.9rem] p-8 flex flex-col relative overflow-hidden ${plan.special ? 'bg-slate-900 border border-indigo-500/30' : 'bg-slate-950'
+                                        <div className={`h-full rounded-[2.4rem] flex flex-col relative overflow-hidden ${plan.special ? 'bg-slate-900 border border-indigo-500/30' : 'bg-slate-950'
                                             }`}>
-                                            {/* Glow Effect */}
-                                            {plan.special && (
-                                                <div className="absolute top-0 inset-x-0 h-40 bg-indigo-500/10 blur-3xl pointer-events-none"></div>
-                                            )}
 
-                                            {/* Header */}
-                                            <div className="mb-8 relative">
-                                                <div className="flex justify-between items-start mb-4">
-                                                    <h3 className={`text-xl font-bold ${plan.special ? 'text-indigo-400' : 'text-slate-200'}`}>
-                                                        {plan.name}
-                                                    </h3>
+                                            {/* Top Illustration Area */}
+                                            <div className={`relative h-48 overflow-hidden ${plan.special ? 'bg-indigo-600/20' : 'bg-slate-900'}`}>
+                                                <div className="absolute inset-0 bg-gradient-to-b from-transparent to-slate-950/80 z-10"></div>
+                                                <div className="absolute inset-0 flex items-center justify-center">
+                                                    <div className={`w-24 h-24 rounded-3xl flex items-center justify-center ${plan.special ? 'bg-indigo-500/20 text-indigo-400' : 'bg-slate-800 text-slate-400'}`}>
+                                                        {plan.name === 'Başlangıç' ? <Zap className="w-12 h-12" /> :
+                                                            plan.name === 'Profesyonel' ? <Star className="w-12 h-12" /> :
+                                                                <Shield className="w-12 h-12" />}
+                                                    </div>
+                                                </div>
+                                                {/* Decorative elements */}
+                                                <div className="absolute top-4 right-4 z-20">
                                                     {plan.special && (
-                                                        <span className="px-3 py-1 rounded-full bg-indigo-500 text-white text-[10px] font-bold uppercase tracking-wider shadow-lg shadow-indigo-500/40">
+                                                        <span className="px-3 py-1 rounded-full bg-indigo-500 text-white text-[10px] font-bold uppercase tracking-wider shadow-lg">
                                                             Popüler
                                                         </span>
                                                     )}
                                                 </div>
-                                                <p className="text-slate-500 text-xs font-medium">{plan.desc}</p>
                                             </div>
 
-                                            {/* Price (Large Display) */}
-                                            <div className="mb-8 min-h-[70px]">
-                                                {plan.displayPrice === 'Bize Ulaşın' ? (
-                                                    <span className="text-3xl font-bold text-white tracking-tight">Bize Ulaşın</span>
-                                                ) : (
-                                                    <div className="flex items-baseline gap-1">
-                                                        <span className="text-4xl lg:text-5xl font-extrabold text-white tracking-tighter">
-                                                            {plan.displayPrice}
-                                                        </span>
-                                                        <span className="text-slate-500 text-sm font-medium">/ay</span>
+                                            <div className="p-8 flex flex-col flex-1">
+                                                {/* Header */}
+                                                <div className="mb-6">
+                                                    <h3 className={`text-2xl font-black mb-2 ${plan.special ? 'text-white' : 'text-slate-100'}`}>
+                                                        {plan.name}
+                                                    </h3>
+                                                    <p className="text-slate-500 text-sm font-medium">{plan.desc}</p>
+                                                </div>
+
+                                                {/* Features List */}
+                                                <div className="mb-8 flex-1">
+                                                    <ul className="space-y-3">
+                                                        {(plan.features || []).map((f: string, i: number) => (
+                                                            <li key={i} className="flex items-start gap-3">
+                                                                <Check className={`w-4 h-4 mt-0.5 shrink-0 ${plan.special ? 'text-indigo-400' : 'text-slate-500'}`} strokeWidth={3} />
+                                                                <span className="text-[14px] text-slate-300 font-medium leading-tight">
+                                                                    {f}
+                                                                </span>
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                </div>
+
+                                                {/* Duration Selectors (Stacked Cards) */}
+                                                {plan.name !== 'Kurumsal' && plan.variants && plan.variants.length > 0 && (
+                                                    <div className="mb-8 space-y-3">
+                                                        {plan.variants.filter((v: any) => [3, 6, 12].includes(v.duration_months)).map((v: any) => (
+                                                            <button
+                                                                key={v.duration_months}
+                                                                onClick={() => setSelectedDurations(prev => ({ ...prev, [plan.name]: v.duration_months }))}
+                                                                className={`w-full p-4 rounded-2xl flex items-center justify-between transition-all duration-300 border-2 relative ${plan.currentDur === v.duration_months
+                                                                    ? 'bg-indigo-600/10 border-indigo-500 shadow-xl shadow-indigo-500/10'
+                                                                    : 'bg-slate-900/50 border-slate-800 hover:border-slate-700'
+                                                                    }`}
+                                                            >
+                                                                {v.duration_months === 12 && (
+                                                                    <div className="absolute -top-2.5 right-4 px-2 py-0.5 bg-indigo-600 text-[9px] font-black text-white rounded-full uppercase tracking-tighter z-10">
+                                                                        En Popüler
+                                                                    </div>
+                                                                )}
+                                                                <div className="flex flex-col text-left">
+                                                                    <span className={`text-[15px] font-black ${plan.currentDur === v.duration_months ? 'text-white' : 'text-slate-300'}`}>
+                                                                        {v.duration_months} Aylık Plan
+                                                                    </span>
+                                                                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-tighter">
+                                                                        {v.duration_months === 12 ? 'Yıllık Yenilenir' : `${v.duration_months} Aylık Ödeme`}
+                                                                    </span>
+                                                                </div>
+                                                                <div className="flex flex-col text-right">
+                                                                    <span className={`text-[18px] font-black ${plan.currentDur === v.duration_months ? 'text-white' : 'text-slate-200'}`}>
+                                                                        ₺{v.price.toLocaleString('tr-TR')}
+                                                                    </span>
+                                                                    <span className="text-[10px] font-bold text-slate-500 uppercase">/ AY</span>
+                                                                </div>
+                                                            </button>
+                                                        ))}
                                                     </div>
                                                 )}
-                                            </div>
 
-                                            {/* Features List */}
-                                            <div className="mb-8 flex-1">
-                                                <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-4 ml-1">Neler Dahil?</div>
-                                                <ul className="space-y-3.5">
-                                                    {(plan.features || []).map((f: string, i: number) => (
-                                                        <li key={i} className="flex items-start gap-3">
-                                                            <div className={`mt-0.5 w-5 h-5 rounded-full flex items-center justify-center shrink-0 ${plan.special ? 'bg-indigo-500/20 text-indigo-400' : 'bg-slate-800 text-slate-400'}`}>
-                                                                <Check className="w-3 h-3" strokeWidth={3} />
-                                                            </div>
-                                                            <span className="text-[13px] text-slate-300 font-medium leading-tight">
-                                                                {f}
-                                                            </span>
-                                                        </li>
-                                                    ))}
-                                                </ul>
-                                            </div>
-
-                                            {/* Duration Selectors (Stacked Cards) */}
-                                            {plan.name !== 'Kurumsal' && plan.variants && plan.variants.length > 0 && (
-                                                <div className="mb-8 space-y-3">
-                                                    <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3 ml-1">Süre Seçenekleri</div>
-                                                    {plan.variants.filter((v: any) => [3, 6, 12].includes(v.duration_months)).map((v: any) => (
-                                                        <button
-                                                            key={v.duration_months}
-                                                            onClick={() => setSelectedDurations(prev => ({ ...prev, [plan.name]: v.duration_months }))}
-                                                            className={`w-full p-4 rounded-2xl flex items-center justify-between transition-all duration-300 border-2 ${plan.currentDur === v.duration_months
-                                                                ? 'bg-indigo-600/10 border-indigo-500 shadow-xl shadow-indigo-500/10 ring-1 ring-indigo-500/20'
-                                                                : 'bg-slate-900/50 border-slate-800 hover:border-slate-700 hover:bg-slate-900'
-                                                                }`}
-                                                        >
-                                                            <div className="flex items-center gap-4">
-                                                                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${plan.currentDur === v.duration_months ? 'border-indigo-500 bg-indigo-500' : 'border-slate-800'
-                                                                    }`}>
-                                                                    {plan.currentDur === v.duration_months && <div className="w-2 h-2 rounded-full bg-white animate-pulse" />}
-                                                                </div>
-                                                                <div className="text-left">
-                                                                    <div className={`text-[13px] font-bold ${plan.currentDur === v.duration_months ? 'text-white' : 'text-slate-300'}`}>
-                                                                        {v.duration_months} Aylık Plan
-                                                                    </div>
-                                                                    <div className="text-[9px] font-medium text-slate-500 uppercase tracking-tighter">
-                                                                        {v.duration_months === 12 ? 'Yıllık Yenilenir' : `${v.duration_months} Aylık Ödeme`}
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div className="text-right">
-                                                                <div className={`text-[14px] font-black ${plan.currentDur === v.duration_months ? 'text-white' : 'text-slate-200'}`}>
-                                                                    ₺{v.price.toLocaleString('tr-TR')}
-                                                                </div>
-                                                                <div className="text-[9px] font-bold text-slate-500 uppercase">/ AY</div>
-                                                            </div>
-                                                        </button>
-                                                    ))}
-                                                </div>
-                                            )}
-
-                                            {/* Action Button */}
-                                            <button
-                                                onClick={() => {
-                                                    if (plan.name === 'Kurumsal') {
-                                                        window.open('https://wa.me/905453915840?text=Kurumsal%20hizmetler%20hakkında%20bilgi%20almak%20istiyorum.', '_blank');
-                                                    } else {
-                                                        const variant = plan.variants?.find((v: any) => v.duration_months === plan.currentDur);
-                                                        const checkoutUrl = `/checkout?plan=${variant?.id}`;
-
-                                                        if (isLoggedIn) {
-                                                            router.push(checkoutUrl);
+                                                {/* Action Button */}
+                                                <button
+                                                    onClick={() => {
+                                                        if (plan.name === 'Kurumsal') {
+                                                            window.open('https://wa.me/905453915840?text=Kurumsal%20hizmetler%20hakkında%20bilgi%20almak%20istiyorum.', '_blank');
                                                         } else {
-                                                            router.push(`/?auth=register&next=${encodeURIComponent(checkoutUrl)}#pricing`);
-                                                            setAuthMode('register');
-                                                            setShowAuthModal(true);
+                                                            const variant = plan.variants?.find((v: any) => v.duration_months === plan.currentDur);
+                                                            const checkoutUrl = `/checkout?plan=${variant?.id}`;
+
+                                                            if (isLoggedIn) {
+                                                                router.push(checkoutUrl);
+                                                            } else {
+                                                                router.push(`/?auth=register&next=${encodeURIComponent(checkoutUrl)}#pricing`);
+                                                                setAuthMode('register');
+                                                                setShowAuthModal(true);
+                                                            }
                                                         }
-                                                    }
-                                                }}
-                                                className={`w-full py-5 rounded-2xl font-black text-[14px] uppercase tracking-[0.2em] transition-all duration-300 transform active:scale-[0.98] ${plan.special
-                                                    ? 'bg-gradient-to-r from-indigo-600 to-blue-600 text-white hover:shadow-[0_0_30px_rgb(79,70,229,0.4)] ring-2 ring-indigo-500/20'
-                                                    : 'bg-slate-800 text-white hover:bg-slate-700 border border-slate-700'
-                                                    }`}
-                                            >
-                                                {plan.name === 'Kurumsal' ? 'BİZE ULAŞIN' : 'HEMEN BAŞLA'}
-                                            </button>
+                                                    }}
+                                                    className={`w-full py-5 rounded-2xl font-black text-[15px] uppercase tracking-[0.1em] transition-all duration-300 transform active:scale-[0.98] ${plan.special
+                                                        ? 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-xl shadow-indigo-600/20'
+                                                        : 'bg-white text-slate-900 hover:bg-slate-100'
+                                                        }`}
+                                                >
+                                                    {plan.name === 'Kurumsal' ? 'BİZE ULAŞIN' : 'ABONE OL VE DEVAM ET'}
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 </motion.div>
