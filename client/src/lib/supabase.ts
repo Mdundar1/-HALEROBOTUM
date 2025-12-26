@@ -3,11 +3,9 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js';
 // Environment variables (may be empty during build)
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY || '';
 
 // Lazy initialization to avoid build-time errors
 let _supabase: SupabaseClient | null = null;
-let _supabaseAdmin: SupabaseClient | null = null;
 
 export function getSupabase(): SupabaseClient | null {
     if (!_supabase && supabaseUrl && supabaseAnonKey) {
@@ -16,20 +14,9 @@ export function getSupabase(): SupabaseClient | null {
     return _supabase;
 }
 
-export function getSupabaseAdmin(): SupabaseClient | null {
-    if (!_supabaseAdmin && supabaseUrl && supabaseServiceKey) {
-        _supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey);
-    }
-    return _supabaseAdmin;
-}
-
 // For backward compatibility - now properly typed as nullable
 export const supabase: SupabaseClient | null = supabaseUrl && supabaseAnonKey
     ? createClient(supabaseUrl, supabaseAnonKey)
-    : null;
-
-export const supabaseAdmin: SupabaseClient | null = supabaseUrl && supabaseServiceKey
-    ? createClient(supabaseUrl, supabaseServiceKey)
     : null;
 
 

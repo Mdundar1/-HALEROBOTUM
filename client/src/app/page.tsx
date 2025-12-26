@@ -121,23 +121,62 @@ function LandingContent() {
 
                     // Group by Name (matching Admin logic)
                     const groups: Record<string, PlanGroup> = {};
+
+                    // Feature Definitions
+                    const standardFeatures = [
+                        'Her ay güncellenen birim fiyatlar',
+                        'Standart Raporlama seçenekleri',
+                        'Ayda 10 adet ihale yaklaşık maliyet analizi',
+                        'Pozbul ekranına sınırsız erişim',
+                        '7 / 24 standart destek'
+                    ];
+
+                    const proFeatures = [
+                        'Her ay güncellenen birim fiyatlar',
+                        'Gelişmiş Raporlama seçenekleri',
+                        'Sınırsız sayıda ihale yaklaşık maliyet analizi',
+                        'Pozbul ekranına sınırsız erişim',
+                        '7 / 24 anlık destek',
+                        'Analiz oluştur ekranı'
+                    ];
+
+                    const enterpriseFeatures = [
+                        'API Erişimi',
+                        'Çoklu Kullanıcı',
+                        'Özel Entegrasyon',
+                        'Metraj Servisleri',
+                        'Danışmanlık'
+                    ];
+
                     data.forEach((plan: Plan) => {
                         if (!groups[plan.name]) {
-                            // Map existing hardcoded descriptions for visual consistency
-                            const descs: Record<string, string> = {
-                                'Standart': 'Şahıs projeleri için.',
-                                'Başlangıç': 'Şahıs projeleri için.',
-                                'Profesyonel': 'Profesyonel ekipler.',
-                                'Kurumsal': 'Büyük ölçekli yapılar.'
-                            };
+                            let displayName = plan.name;
+                            let desc = '';
+                            let features = [];
+
+                            if (plan.name === 'Standart' || plan.name === 'Başlangıç') {
+                                displayName = 'Standart';
+                                desc = 'Şahıs projeleri için.';
+                                features = standardFeatures;
+                            } else if (plan.name === 'Profesyonel') {
+                                displayName = 'Profesyonel';
+                                desc = 'Profesyonel ekipler.';
+                                features = proFeatures;
+                            } else if (plan.name === 'Kurumsal') {
+                                displayName = 'Kurumsal';
+                                desc = 'Büyük ölçekli yapılar.';
+                                features = enterpriseFeatures;
+                            } else {
+                                features = typeof plan.features === 'string' ? JSON.parse(plan.features || '[]') : (plan.features || []);
+                            }
 
                             groups[plan.name] = {
-                                name: plan.name === 'Standart' ? 'Başlangıç' : plan.name,
+                                name: displayName,
                                 tag: plan.tag,
-                                features: typeof plan.features === 'string' ? JSON.parse(plan.features || '[]') : (plan.features || []),
+                                features: features,
                                 variants: [],
                                 special: plan.name === 'Profesyonel', // Mark as popüler
-                                desc: descs[plan.name] || descs['Başlangıç'] || ''
+                                desc: desc
                             };
                         }
                         groups[plan.name].variants.push(plan);
@@ -675,14 +714,20 @@ function LandingContent() {
                         >
                             {(apiPlanGroups.length > 0 ? apiPlanGroups : [
                                 {
-                                    name: 'Başlangıç',
+                                    name: 'Standart',
                                     variants: [
                                         { id: 'starter-1m', duration_months: 1, price: 1299, is_active: true } as Plan,
                                         { id: 'starter-3m', duration_months: 3, price: 2499, is_active: true } as Plan,
                                         { id: 'starter-12m', duration_months: 12, price: 6999, is_active: true } as Plan,
                                     ],
                                     desc: 'Şahıs projeleri için.',
-                                    features: ['1 Proje Hakkı', 'Temel Metraj Analizi', 'Standart Raporlama', 'Poz Arama Motoru']
+                                    features: [
+                                        'Her ay güncellenen birim fiyatlar',
+                                        'Standart Raporlama seçenekleri',
+                                        'Ayda 10 adet ihale yaklaşık maliyet analizi',
+                                        'Pozbul ekranına sınırsız erişim',
+                                        '7 / 24 standart destek'
+                                    ]
                                 },
                                 {
                                     name: 'Profesyonel',
@@ -692,7 +737,14 @@ function LandingContent() {
                                         { id: 'pro-12m', duration_months: 12, price: 7999, is_active: true } as Plan,
                                     ],
                                     desc: 'Profesyonel ekipler.',
-                                    features: ['Sınırsız Proje', '7/24 Öncelikli Destek', 'Güncel Birim Fiyatlar', 'Excel Raporlama', 'Sınırsız Analiz'],
+                                    features: [
+                                        'Her ay güncellenen birim fiyatlar',
+                                        'Gelişmiş Raporlama seçenekleri',
+                                        'Sınırsız sayıda ihale yaklaşık maliyet analizi',
+                                        'Pozbul ekranına sınırsız erişim',
+                                        '7 / 24 anlık destek',
+                                        'Analiz oluştur ekranı'
+                                    ],
                                     special: true
                                 },
                                 {
@@ -732,21 +784,45 @@ function LandingContent() {
                                             }`}>
 
                                             {/* Top Illustration Area */}
-                                            <div className={`relative h-48 overflow-hidden ${plan.special ? 'bg-indigo-600/20' : 'bg-slate-900'}`}>
-                                                <div className="absolute inset-0 bg-gradient-to-b from-transparent to-slate-950/80 z-10"></div>
-                                                <div className="absolute inset-0 flex items-center justify-center">
-                                                    <div className={`w-24 h-24 rounded-3xl flex items-center justify-center ${plan.special ? 'bg-indigo-500/20 text-indigo-400' : 'bg-slate-800 text-slate-400'}`}>
-                                                        {plan.name === 'Başlangıç' ? <Zap className="w-12 h-12" /> :
-                                                            plan.name === 'Profesyonel' ? <Star className="w-12 h-12" /> :
-                                                                <Shield className="w-12 h-12" />}
-                                                    </div>
+                                            <div className={`relative h-48 overflow-hidden ${plan.special ? 'bg-indigo-900/40' : 'bg-slate-900'}`}>
+                                                <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-[0.05]"></div>
+                                                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-slate-950/90 z-10"></div>
+
+                                                <div className="absolute inset-0 flex items-center justify-center z-20">
+                                                    <motion.div
+                                                        animate={{
+                                                            y: [0, -10, 0],
+                                                            scale: [1, 1.05, 1],
+                                                            filter: ["drop-shadow(0 0 0px rgba(99, 102, 241, 0))", "drop-shadow(0 0 20px rgba(99, 102, 241, 0.5))", "drop-shadow(0 0 0px rgba(99, 102, 241, 0))"]
+                                                        }}
+                                                        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                                                        className={`w-24 h-24 rounded-3xl flex items-center justify-center backdrop-blur-sm border border-white/10 ${plan.special ? 'bg-indigo-500/20 text-indigo-400' : 'bg-slate-800/50 text-slate-400'}`}
+                                                    >
+                                                        {plan.name === 'Standart' ? <Zap className="w-10 h-10" /> :
+                                                            plan.name === 'Profesyonel' ? <Star className="w-10 h-10" /> :
+                                                                <Shield className="w-10 h-10" />}
+                                                    </motion.div>
                                                 </div>
-                                                {/* Decorative elements */}
-                                                <div className="absolute top-4 right-4 z-20">
+
+                                                {/* Animated Background Elements */}
+                                                <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+                                                    <motion.div
+                                                        animate={{ rotate: 360 }}
+                                                        transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                                                        className={`absolute -top-1/2 -right-1/2 w-full h-full rounded-full blur-[80px] opacity-30 ${plan.special ? 'bg-indigo-500' : 'bg-slate-700'}`}
+                                                    />
+                                                </div>
+
+                                                {/* Popüler Tag */}
+                                                <div className="absolute top-4 right-4 z-30">
                                                     {plan.special && (
-                                                        <span className="px-3 py-1 rounded-full bg-indigo-500 text-white text-[10px] font-bold uppercase tracking-wider shadow-lg">
+                                                        <motion.span
+                                                            initial={{ opacity: 0, scale: 0.8 }}
+                                                            animate={{ opacity: 1, scale: 1 }}
+                                                            className="px-3 py-1 rounded-full bg-gradient-to-r from-indigo-500 to-blue-500 text-white text-[10px] font-bold uppercase tracking-wider shadow-lg border border-white/10"
+                                                        >
                                                             Popüler
-                                                        </span>
+                                                        </motion.span>
                                                     )}
                                                 </div>
                                             </div>
@@ -762,15 +838,26 @@ function LandingContent() {
 
                                                 {/* Features List */}
                                                 <div className="mb-8 flex-1">
-                                                    <ul className="space-y-3">
-                                                        {(plan.features || []).map((f: string, i: number) => (
-                                                            <li key={i} className="flex items-start gap-3">
-                                                                <Check className={`w-4 h-4 mt-0.5 shrink-0 ${plan.special ? 'text-indigo-400' : 'text-slate-500'}`} strokeWidth={3} />
-                                                                <span className="text-[14px] text-slate-300 font-medium leading-tight">
-                                                                    {f}
-                                                                </span>
-                                                            </li>
-                                                        ))}
+                                                    <ul className="space-y-4">
+                                                        {(plan.features || []).map((f: string, i: number) => {
+                                                            const isSuperior = plan.name === 'Profesyonel' && [
+                                                                'Gelişmiş Raporlama seçenekleri',
+                                                                'Sınırsız sayıda ihale yaklaşık maliyet analizi',
+                                                                '7 / 24 anlık destek',
+                                                                'Analiz oluştur ekranı'
+                                                            ].includes(f);
+
+                                                            return (
+                                                                <li key={i} className="flex items-start gap-3">
+                                                                    <div className={`mt-0.5 w-5 h-5 rounded-full flex items-center justify-center ${isSuperior ? 'bg-emerald-500/20 text-emerald-500' : 'bg-slate-800 text-slate-500'}`}>
+                                                                        <Check className="w-3 h-3" strokeWidth={3} />
+                                                                    </div>
+                                                                    <span className={`text-[14px] font-medium leading-tight ${isSuperior ? 'text-white' : 'text-slate-400'}`}>
+                                                                        {f}
+                                                                    </span>
+                                                                </li>
+                                                            );
+                                                        })}
                                                     </ul>
                                                 </div>
 
