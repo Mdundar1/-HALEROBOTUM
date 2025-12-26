@@ -334,7 +334,6 @@ function LandingContent() {
                                 >
                                     <span className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse"></span>
                                     <Logo className="scale-[0.5] origin-left -ml-2" animated={false} />
-                                    AI Destekli Metraj Çözümleri
                                 </motion.div>
                                 <motion.h1
                                     variants={fadeInUp}
