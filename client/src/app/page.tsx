@@ -710,7 +710,7 @@ function LandingContent() {
                             initial="initial"
                             whileInView="animate"
                             viewport={{ once: true }}
-                            className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto items-start"
+                            className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto items-start"
                         >
                             {(apiPlanGroups.length > 0 ? apiPlanGroups : [
                                 {
@@ -776,15 +776,15 @@ function LandingContent() {
                                     variants={fadeInUp}
                                     className={`relative group h-full`}
                                 >
-                                    <div className={`h-full rounded-[2.5rem] p-1 transition-all duration-500 ${plan.special
-                                        ? 'bg-gradient-to-b from-indigo-500 to-blue-600 shadow-2xl shadow-indigo-500/20 scale-[1.02]'
-                                        : 'bg-slate-800 hover:bg-slate-700'
+                                    <div className={`h-full rounded-3xl p-1 transition-all duration-500 ${plan.special
+                                        ? 'bg-gradient-to-b from-indigo-500/50 to-blue-600/50 shadow-2xl shadow-indigo-500/10'
+                                        : 'bg-slate-800/50 hover:bg-slate-700/50'
                                         }`}>
-                                        <div className={`h-full rounded-[2.4rem] flex flex-col relative overflow-hidden ${plan.special ? 'bg-slate-900 border border-indigo-500/30' : 'bg-slate-950'
+                                        <div className={`h-full rounded-[1.4rem] flex flex-col relative overflow-hidden ${plan.special ? 'bg-slate-950 border border-indigo-500/20' : 'bg-slate-950 border border-slate-800'
                                             }`}>
 
-                                            {/* Top Illustration Area */}
-                                            <div className={`relative h-48 overflow-hidden ${plan.special ? 'bg-indigo-900/40' : 'bg-slate-900'}`}>
+                                            {/* Top Illustration Area - Compact */}
+                                            <div className={`relative h-32 overflow-hidden ${plan.special ? 'bg-indigo-900/20' : 'bg-slate-900/50'}`}>
                                                 <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-[0.05]"></div>
                                                 <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-slate-950/90 z-10"></div>
 
@@ -796,11 +796,11 @@ function LandingContent() {
                                                             filter: ["drop-shadow(0 0 0px rgba(99, 102, 241, 0))", "drop-shadow(0 0 20px rgba(99, 102, 241, 0.5))", "drop-shadow(0 0 0px rgba(99, 102, 241, 0))"]
                                                         }}
                                                         transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                                                        className={`w-24 h-24 rounded-3xl flex items-center justify-center backdrop-blur-sm border border-white/10 ${plan.special ? 'bg-indigo-500/20 text-indigo-400' : 'bg-slate-800/50 text-slate-400'}`}
+                                                        className={`w-16 h-16 rounded-2xl flex items-center justify-center backdrop-blur-sm border border-white/5 ${plan.special ? 'bg-indigo-500/10 text-indigo-400' : 'bg-slate-800/50 text-slate-500'}`}
                                                     >
-                                                        {plan.name === 'Standart' ? <Zap className="w-10 h-10" /> :
-                                                            plan.name === 'Profesyonel' ? <Star className="w-10 h-10" /> :
-                                                                <Shield className="w-10 h-10" />}
+                                                        {plan.name === 'Standart' ? <Zap className="w-8 h-8" /> :
+                                                            plan.name === 'Profesyonel' ? <Star className="w-8 h-8" /> :
+                                                                <Shield className="w-8 h-8" />}
                                                     </motion.div>
                                                 </div>
 
@@ -814,7 +814,7 @@ function LandingContent() {
                                                 </div>
 
                                                 {/* Popüler Tag */}
-                                                <div className="absolute top-4 right-4 z-30">
+                                                <div className="absolute top-3 right-3 z-30">
                                                     {plan.special && (
                                                         <motion.span
                                                             initial={{ opacity: 0, scale: 0.8 }}
@@ -827,10 +827,10 @@ function LandingContent() {
                                                 </div>
                                             </div>
 
-                                            <div className="p-8 flex flex-col flex-1">
+                                            <div className="p-6 flex flex-col flex-1">
                                                 {/* Header */}
                                                 <div className="mb-6">
-                                                    <h3 className={`text-2xl font-black mb-2 ${plan.special ? 'text-white' : 'text-slate-100'}`}>
+                                                    <h3 className={`text-xl font-bold mb-1 ${plan.special ? 'text-white' : 'text-slate-200'}`}>
                                                         {plan.name}
                                                     </h3>
                                                     <p className="text-slate-500 text-sm font-medium">{plan.desc}</p>
@@ -838,7 +838,7 @@ function LandingContent() {
 
                                                 {/* Features List */}
                                                 <div className="mb-8 flex-1">
-                                                    <ul className="space-y-4">
+                                                    <ul className="space-y-3">
                                                         {(plan.features || []).map((f: string, i: number) => {
                                                             const isSuperior = plan.name === 'Profesyonel' && [
                                                                 'Gelişmiş Raporlama seçenekleri',
@@ -868,9 +868,9 @@ function LandingContent() {
                                                             <button
                                                                 key={v.duration_months}
                                                                 onClick={() => setSelectedDurations(prev => ({ ...prev, [plan.name]: v.duration_months }))}
-                                                                className={`w-full p-4 rounded-2xl flex items-center justify-between transition-all duration-300 border-2 relative ${plan.currentDur === v.duration_months
-                                                                    ? 'bg-indigo-600/10 border-indigo-500 shadow-xl shadow-indigo-500/10'
-                                                                    : 'bg-slate-900/50 border-slate-800 hover:border-slate-700'
+                                                                className={`w-full p-3 rounded-xl flex items-center justify-between transition-all duration-300 border relative group ${plan.currentDur === v.duration_months
+                                                                    ? 'bg-indigo-500/10 border-indigo-500/50'
+                                                                    : 'bg-transparent border-slate-800 hover:border-slate-700 hover:bg-slate-800/30'
                                                                     }`}
                                                             >
                                                                 {v.duration_months === 12 && (
@@ -915,8 +915,8 @@ function LandingContent() {
                                                             }
                                                         }
                                                     }}
-                                                    className={`w-full py-5 rounded-2xl font-black text-[15px] uppercase tracking-[0.1em] transition-all duration-300 transform active:scale-[0.98] ${plan.special
-                                                        ? 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-xl shadow-indigo-600/20'
+                                                    className={`w-full py-4 rounded-2xl font-black text-sm uppercase tracking-widest transition-all duration-300 transform active:scale-[0.98] ${plan.special
+                                                        ? 'bg-indigo-600 text-white hover:bg-indigo-500 shadow-2xl shadow-indigo-500/20'
                                                         : 'bg-white text-slate-900 hover:bg-slate-100'
                                                         }`}
                                                 >
