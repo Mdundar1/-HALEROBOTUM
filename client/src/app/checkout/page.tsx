@@ -33,18 +33,35 @@ function CheckoutContent() {
         }
     }, [isLoggedIn, router]);
 
+    // Fallback Data
+    const FALLBACK_PLANS = [
+        { id: 'starter-1m', name: 'Standart', price: 1299, duration_months: 1, desc: 'Şahıs projeleri için.' },
+        { id: 'starter-3m', name: 'Standart', price: 2499, duration_months: 3, desc: 'Şahıs projeleri için.', discount_percent: 35 },
+        { id: 'starter-12m', name: 'Standart', price: 6999, duration_months: 12, desc: 'Şahıs projeleri için.', discount_percent: 55 },
+        { id: 'pro-1m', name: 'Profesyonel', price: 1499, duration_months: 1, desc: 'Profesyonel ekipler.', tag: 'Popüler' },
+        { id: 'pro-3m', name: 'Profesyonel', price: 2899, duration_months: 3, desc: 'Profesyonel ekipler.', tag: 'Popüler', discount_percent: 35 },
+        { id: 'pro-12m', name: 'Profesyonel', price: 7999, duration_months: 12, desc: 'Profesyonel ekipler.', tag: 'Popüler', discount_percent: 55 },
+    ];
+
     useEffect(() => {
         const fetchPlans = async () => {
             try {
                 const res = await fetch('/api/subscription/plans');
                 if (res.ok) {
                     const data = await res.json();
-                    // Sort by price
-                    const validPlans = data.sort((a: any, b: any) => (a.price || 0) - (b.price || 0));
-                    setPlans(validPlans);
+                    if (Array.isArray(data) && data.length > 0) {
+                        // Sort by price
+                        const validPlans = data.sort((a: any, b: any) => (a.price || 0) - (b.price || 0));
+                        setPlans(validPlans);
+                    } else {
+                        setPlans(FALLBACK_PLANS);
+                    }
+                } else {
+                    setPlans(FALLBACK_PLANS);
                 }
             } catch (error) {
                 console.error('Error fetching plans:', error);
+                setPlans(FALLBACK_PLANS);
             } finally {
                 setPlansLoading(false);
             }
