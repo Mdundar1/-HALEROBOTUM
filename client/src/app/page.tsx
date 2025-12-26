@@ -313,7 +313,7 @@ function LandingContent() {
 
             <main className="relative z-10 pt-20">
                 {/* HERO SECTION */}
-                <section className="relative pt-32 pb-20 overflow-hidden">
+                <section className="relative pt-24 md:pt-32 pb-20 overflow-hidden">
                     <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl relative z-10">
                         <div className="grid lg:grid-cols-2 gap-20 items-center">
                             <motion.div
@@ -338,10 +338,10 @@ function LandingContent() {
                                 </motion.div>
                                 <motion.h1
                                     variants={fadeInUp}
-                                    className="text-6xl lg:text-7xl font-black text-slate-900 leading-[1.1] tracking-tight mb-8"
+                                    className="text-4xl md:text-6xl lg:text-7xl font-black text-slate-900 leading-[1.1] tracking-tight mb-8"
                                 >
-                                    İhale Metraj ve Maliyetlerinizi <br />
-                                    <span className="text-indigo-600">Dakikalar İçinde</span> <br />
+                                    İhale Yaklaşık Maliyetini <br />
+                                    <span className="text-indigo-600">Anında</span> <br />
                                     Hatasız Hesaplayın.
                                 </motion.h1>
                                 <p className="text-xl text-slate-600 font-semibold leading-relaxed mb-12 max-w-xl">
