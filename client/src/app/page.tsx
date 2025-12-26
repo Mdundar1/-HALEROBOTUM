@@ -620,23 +620,35 @@ function LandingContent() {
                             <p className="text-lg text-slate-500 font-medium italic">Karmaşık süreçleri basit adımlara dönüştürdük.</p>
                         </div>
 
-                        <div className="grid md:grid-cols-3 gap-12">
+                        <div className="grid md:grid-cols-3 gap-8">
                             {[
-                                { id: '01', title: 'Dosya Yükle', desc: 'Metraj dosyanızı (.docx, .txt) sisteme sürükleyip bırakın.', icon: <Upload className="w-8 h-8" /> },
-                                { id: '02', title: 'Analiz Et', desc: 'Yapay zeka metinleri tarar ve en uygun pozlarla eşleştirir.', icon: <Search className="w-8 h-8" /> },
-                                { id: '03', title: 'Rapor Al', desc: 'Sonuçları Excel formatında indirin ve kullanıma hazır hale getirin.', icon: <Download className="w-8 h-8" /> }
+                                { id: '01', title: 'Dosya Yükle', desc: 'Metraj dosyanızı (.docx, .txt) sisteme sürükleyip bırakın.', icon: <Upload className="w-6 h-6" />, image: '/step-1.jpg' },
+                                { id: '02', title: 'Analiz Et', desc: 'Yapay zeka metinleri tarar ve en uygun pozlarla eşleştirir.', icon: <Search className="w-6 h-6" />, image: '/step-2.jpg' },
+                                { id: '03', title: 'Rapor Al', desc: 'Sonuçları Excel formatında indirin ve kullanıma hazır hale getirin.', icon: <Download className="w-6 h-6" />, image: '/step-3.jpg' }
                             ].map((step, idx) => (
                                 <motion.div
                                     key={idx}
                                     whileHover={{ y: -10 }}
-                                    className="premium-card p-10 group"
+                                    className="group relative h-[400px] rounded-[2.5rem] overflow-hidden shadow-2xl"
                                 >
-                                    <div className="w-20 h-20 rounded-3xl bg-slate-50 border border-slate-100 flex items-center justify-center text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white transition-all duration-500 shadow-inner">
-                                        {step.icon}
+                                    {/* Background Image */}
+                                    <div
+                                        className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
+                                        style={{ backgroundImage: `url(${step.image})` }}
+                                    />
+
+                                    {/* Gradient Overlay */}
+                                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/80 to-transparent opacity-90 transition-opacity duration-300 group-hover:opacity-95" />
+
+                                    {/* Content */}
+                                    <div className="relative h-full p-8 flex flex-col justify-end z-10">
+                                        <div className="w-14 h-14 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white mb-6 group-hover:bg-indigo-600 group-hover:border-indigo-500 transition-colors duration-300">
+                                            {step.icon}
+                                        </div>
+                                        <div className="text-[10px] font-black text-indigo-400 mb-2 uppercase tracking-[0.3em]">{step.id}</div>
+                                        <h3 className="text-2xl font-black text-white mb-3 tracking-tight">{step.title}</h3>
+                                        <p className="text-slate-300 font-medium leading-relaxed text-sm">{step.desc}</p>
                                     </div>
-                                    <div className="text-[10px] font-black text-slate-400 mb-4 uppercase tracking-[0.3em]">{step.id}</div>
-                                    <h3 className="text-2xl font-black text-slate-900 mb-4 tracking-tighter">{step.title}</h3>
-                                    <p className="text-slate-500 font-medium leading-relaxed text-sm">{step.desc}</p>
                                 </motion.div>
                             ))}
                         </div>
