@@ -622,32 +622,38 @@ function LandingContent() {
 
                         <div className="grid md:grid-cols-3 gap-8">
                             {[
-                                { id: '01', title: 'Dosya Yükle', desc: 'Metraj dosyanızı (.docx, .txt) sisteme sürükleyip bırakın.', icon: <Upload className="w-6 h-6" />, image: '/step-1.jpg' },
-                                { id: '02', title: 'Analiz Et', desc: 'Yapay zeka metinleri tarar ve en uygun pozlarla eşleştirir.', icon: <Search className="w-6 h-6" />, image: '/step-2.jpg' },
-                                { id: '03', title: 'Rapor Al', desc: 'Sonuçları Excel formatında indirin ve kullanıma hazır hale getirin.', icon: <Download className="w-6 h-6" />, image: '/step-3.jpg' }
+                                { id: '01', title: 'Dosya Yükle', desc: 'Metraj dosyanızı (.docx, .txt) sisteme sürükleyip bırakın.', icon: <Upload className="w-5 h-5" />, image: '/step-1.jpg' },
+                                { id: '02', title: 'Analiz Et', desc: 'Yapay zeka metinleri tarar ve en uygun pozlarla eşleştirir.', icon: <Search className="w-5 h-5" />, image: '/step-2.jpg' },
+                                { id: '03', title: 'Rapor Al', desc: 'Sonuçları Excel formatında indirin ve kullanıma hazır hale getirin.', icon: <Download className="w-5 h-5" />, image: '/step-3.jpg' }
                             ].map((step, idx) => (
                                 <motion.div
                                     key={idx}
-                                    whileHover={{ y: -10 }}
-                                    className="group relative h-[400px] rounded-[2.5rem] overflow-hidden shadow-2xl"
+                                    whileHover={{ y: -5 }}
+                                    className="group relative h-[500px] rounded-[2.5rem] overflow-hidden shadow-2xl border border-slate-200/20"
                                 >
                                     {/* Background Image */}
                                     <div
-                                        className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
+                                        className="absolute inset-0 bg-cover bg-top transition-transform duration-700 group-hover:scale-105"
                                         style={{ backgroundImage: `url(${step.image})` }}
                                     />
 
-                                    {/* Gradient Overlay */}
-                                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/80 to-transparent opacity-90 transition-opacity duration-300 group-hover:opacity-95" />
+                                    {/* Subtle Gradient Overlay */}
+                                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent opacity-60 transition-opacity duration-300 group-hover:opacity-80" />
 
-                                    {/* Content */}
-                                    <div className="relative h-full p-8 flex flex-col justify-end z-10">
-                                        <div className="w-14 h-14 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white mb-6 group-hover:bg-indigo-600 group-hover:border-indigo-500 transition-colors duration-300">
-                                            {step.icon}
+                                    {/* Glassmorphism Content Card */}
+                                    <div className="absolute bottom-6 left-6 right-6 z-20">
+                                        <div className="backdrop-blur-md bg-slate-950/60 border border-white/10 rounded-3xl p-6 shadow-lg transition-all duration-300 group-hover:bg-slate-950/80 group-hover:border-indigo-500/30">
+                                            <div className="flex items-start gap-4">
+                                                <div className="w-12 h-12 rounded-xl bg-indigo-600 text-white flex items-center justify-center shrink-0 shadow-lg shadow-indigo-500/20 group-hover:scale-110 transition-transform">
+                                                    {step.icon}
+                                                </div>
+                                                <div>
+                                                    <div className="text-[10px] font-black text-indigo-300 mb-1 uppercase tracking-[0.2em]">{step.id}</div>
+                                                    <h3 className="text-xl font-black text-white mb-2 tracking-tight">{step.title}</h3>
+                                                    <p className="text-slate-300 font-medium leading-relaxed text-xs">{step.desc}</p>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div className="text-[10px] font-black text-indigo-400 mb-2 uppercase tracking-[0.3em]">{step.id}</div>
-                                        <h3 className="text-2xl font-black text-white mb-3 tracking-tight">{step.title}</h3>
-                                        <p className="text-slate-300 font-medium leading-relaxed text-sm">{step.desc}</p>
                                     </div>
                                 </motion.div>
                             ))}

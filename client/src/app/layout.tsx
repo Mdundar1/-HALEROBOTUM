@@ -17,7 +17,7 @@ const spaceGrotesk = Space_Grotesk({
 })
 
 export const metadata: Metadata = {
-    title: 'Maliyet Sihirbazı v2 - AI Destekli Metraj Analizi',
+    title: 'İhale Yaklaşık Maliyetini Anında Hatasız Hesaplayın',
     description: 'Ultra-modern arayüz ile metraj analizi, poz arama ve maliyet tahmini',
 }
 
